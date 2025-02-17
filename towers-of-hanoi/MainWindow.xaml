@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="Towers of Hanoi" Height="600" Width="800">
     <Grid>
-        <Viewport3D Name="Viewport"/>
+        <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                    MouseMove="ViewportMouseMoved" MouseWheel="ViewportMouseScrolled"
+                    MouseLeftButtonDown="ViewportLeftMouseDown" MouseLeftButtonUp="ViewportLeftMouseUp"/>
+        <TextBox Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" TextChanged="DiscCountChanged" Name="DiscCount">6</TextBox>
     </Grid>
 </Window>
