@@ -10,9 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace towers_of_hanoi
 {
@@ -36,8 +34,9 @@ namespace towers_of_hanoi
         }
 
         public List<ModelVisual3D> discList;
+        public List<ModelVisual3D> hitBoxes;
 
-        private ModelVisual3D? draggingDisc;
+        private int draggingFrom;
 
         public Scene3D(Viewport3D Viewport)
         {
@@ -49,6 +48,7 @@ namespace towers_of_hanoi
             viewport.Camera = camera;
             CameraTarget = new Point3D(0, 0, 0);
             discList = new List<ModelVisual3D>();
+            hitBoxes = new List<ModelVisual3D>();
         }
 
         public void SetCameraPos(float x, float y, float z)
@@ -123,16 +123,38 @@ namespace towers_of_hanoi
             if (result is RayMeshGeometry3DHitTestResult meshResult)
             {
                 GeometryModel3D? hitModel = meshResult.ModelHit as GeometryModel3D;
-                if (hitModel != null && discList.Contains(meshResult.VisualHit))
+                if (hitModel != null && hitBoxes.Contains(meshResult.VisualHit))
                 {
-                    draggingDisc = (ModelVisual3D)meshResult.VisualHit;
+                    draggingFrom = hitBoxes.IndexOf((ModelVisual3D)meshResult.VisualHit);
                 }
             }
         }
 
-        public void ReleaseDragAndDrop(System.Windows.Point clickPosition)
+        public (int,int) ReleaseDragAndDrop(System.Windows.Point clickPosition)
         {
-            
+            HitTestResult result = VisualTreeHelper.HitTest(viewport, clickPosition);
+            int draggingTo = 0;
+            bool valid = false;
+
+            if (result is RayMeshGeometry3DHitTestResult meshResult)
+            {
+                GeometryModel3D? hitModel = meshResult.ModelHit as GeometryModel3D;
+                if (hitModel != null && hitBoxes.Contains(meshResult.VisualHit))
+                {
+                    draggingTo = hitBoxes.IndexOf((ModelVisual3D)meshResult.VisualHit);
+                    valid = true;
+                }
+            }
+            if (valid)
+            {
+                // return the movement
+                return (draggingFrom, draggingTo);
+            }
+            else
+            {
+                // return a movement onto the same tower
+                return (draggingFrom, draggingFrom);
+            }
         }
 
         private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, System.Windows.Media.Color colour)
@@ -318,6 +340,78 @@ namespace towers_of_hanoi
             return visual;
         }
 
+        private ModelVisual3D CreateHitbox(float width, float height, float depth)
+        {
+            MeshGeometry3D mesh = new MeshGeometry3D();
+
+            mesh.Positions.Add(new Point3D(-width / 2, 0, -depth / 2));
+            mesh.Positions.Add(new Point3D(-width / 2, 0, depth / 2));
+            mesh.Positions.Add(new Point3D(width / 2, 0, -depth / 2));
+            mesh.Positions.Add(new Point3D(width / 2, 0, depth / 2));
+            mesh.Positions.Add(new Point3D(-width / 2, height, -depth / 2));
+            mesh.Positions.Add(new Point3D(-width / 2, height, depth / 2));
+            mesh.Positions.Add(new Point3D(width / 2, height, -depth / 2));
+            mesh.Positions.Add(new Point3D(width / 2, height, depth / 2));
+
+            mesh.TriangleIndices.Add(0);
+            mesh.TriangleIndices.Add(2);
+            mesh.TriangleIndices.Add(1);
+            mesh.TriangleIndices.Add(1);
+            mesh.TriangleIndices.Add(2);
+            mesh.TriangleIndices.Add(3);
+
+            mesh.TriangleIndices.Add(0);
+            mesh.TriangleIndices.Add(4);
+            mesh.TriangleIndices.Add(2);
+            mesh.TriangleIndices.Add(2);
+            mesh.TriangleIndices.Add(4);
+            mesh.TriangleIndices.Add(6);
+
+            mesh.TriangleIndices.Add(0);
+            mesh.TriangleIndices.Add(1);
+            mesh.TriangleIndices.Add(4);
+            mesh.TriangleIndices.Add(1);
+            mesh.TriangleIndices.Add(5);
+            mesh.TriangleIndices.Add(4);
+
+            mesh.TriangleIndices.Add(1);
+            mesh.TriangleIndices.Add(3);
+            mesh.TriangleIndices.Add(5);
+            mesh.TriangleIndices.Add(3);
+            mesh.TriangleIndices.Add(7);
+            mesh.TriangleIndices.Add(5);
+
+            mesh.TriangleIndices.Add(4);
+            mesh.TriangleIndices.Add(5);
+            mesh.TriangleIndices.Add(6);
+            mesh.TriangleIndices.Add(5);
+            mesh.TriangleIndices.Add(7);
+            mesh.TriangleIndices.Add(6);
+
+            mesh.TriangleIndices.Add(2);
+            mesh.TriangleIndices.Add(6);
+            mesh.TriangleIndices.Add(3);
+            mesh.TriangleIndices.Add(3);
+            mesh.TriangleIndices.Add(6);
+            mesh.TriangleIndices.Add(7);
+
+            // wrap in a GeometryModel3D
+            GeometryModel3D model = new GeometryModel3D();
+            model.Geometry = mesh;
+            model.Material = new EmissiveMaterial(new SolidColorBrush(Colors.Black));
+
+            // wrap in a ModelVisual3D
+            ModelVisual3D visual = new ModelVisual3D();
+            visual.Content = model;
+
+            // add to the viewport
+            viewport.Children.Add(visual);
+
+            hitBoxes.Add(visual);
+
+            return visual;
+        }
+
         private ModelVisual3D CreateBoundingBox(float bigNumber)
         {
             // add the bounding cube
@@ -393,6 +487,7 @@ namespace towers_of_hanoi
         {
             viewport.Children.Clear();
             discList.Clear();
+            hitBoxes.Clear();
 
             // setup the lighting
             DirectionalLight light = new DirectionalLight();
@@ -412,7 +507,10 @@ namespace towers_of_hanoi
             for (int poleNumber = 0; poleNumber < poleCount; poleNumber++)
             {
                 float radius = discCount + discHeight + 1;
+                float horizontalMargin = radius * 0.5f;
+                float verticalMargin = radius * 0.5f;
                 ModelVisual3D pole = CreatePole(radius, discCount * discHeight + discHeight, discHeight, 1, 0.5f, (int)(radius * 8), Colors.Blue);
+                ModelVisual3D hitBox = CreateHitbox(radius * 2 + horizontalMargin, discCount * discHeight + discHeight + verticalMargin, radius * 2 + horizontalMargin);
                 Transform3DGroup transform = new Transform3DGroup();
                 transform.Children.Add(new TranslateTransform3D()
                 {
@@ -420,6 +518,7 @@ namespace towers_of_hanoi
                     OffsetY = -discHeight * 1.5
                 });
                 pole.Transform = transform;
+                hitBox.Transform = transform;
             }
             double startingPoleX = (-(float)(poleCount - 1) / 2 + startingPole) * (discCount + discHeight + 1) * 2.5;
             for (int discNumber = 0; discNumber < discCount; discNumber++)

@@ -70,6 +70,8 @@ namespace towers_of_hanoi
         private void ViewportLeftMouseUp(object sender, MouseEventArgs e)
         {
             // drop object
+            System.Windows.Point currentPos = e.GetPosition(Viewport);
+            (int, int) move = scene.ReleaseDragAndDrop(currentPos);
         }
 
         private void DiscCountChanged(object sender, EventArgs e)
