@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
+using System.Diagnostics;
 
 namespace towers_of_hanoi
 {
@@ -18,6 +19,7 @@ namespace towers_of_hanoi
     public partial class MainWindow : Window
     {
         Scene3D scene;
+        Game game;
         Point lastMousePos;
         bool rightMouseDownLast;
 
@@ -28,6 +30,7 @@ namespace towers_of_hanoi
         {
             InitializeComponent();
             scene = new Scene3D(Viewport);
+            game = new Game(3, discCount, 0, 2);
             scene.Reset(discCount, 3, 0, discHeight);
             lastMousePos = new Point(0, 0);
             rightMouseDownLast = false;
@@ -69,9 +72,22 @@ namespace towers_of_hanoi
 
         private void ViewportLeftMouseUp(object sender, MouseEventArgs e)
         {
-            // drop object
+            // figure out the move thats just been played
             System.Windows.Point currentPos = e.GetPosition(Viewport);
             (int, int) move = scene.ReleaseDragAndDrop(currentPos);
+
+            // see if its a valid, move play it if yes
+            if (game.MoveDisc(move.Item1, move.Item2))
+            {
+                // valid move, move disc
+                scene.MoveDisc(game.PeekPole(move.Item2), move.Item2, game.NumberOnPole(move.Item2) - 1);
+                if (game.GameWon)
+                {
+                    MessageBox.Show("You won in " + game.MovesTaken.ToString() + " moves!");
+                    game = new Game(3, discCount, 0, 2);
+                    scene.Reset(discCount, 3, 0, discHeight);
+                }
+            }
         }
 
         private void DiscCountChanged(object sender, EventArgs e)
@@ -79,6 +95,7 @@ namespace towers_of_hanoi
             if (Int32.TryParse(DiscCount.Text, out int count) && count <= 20 && scene != null)
             {
                 discCount = count;
+                game = new Game(3, discCount, 0, 2);
                 scene.Reset(discCount, 3, 0, discHeight);
             }
         }

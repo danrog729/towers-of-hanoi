@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 
 namespace towers_of_hanoi
@@ -35,6 +36,10 @@ namespace towers_of_hanoi
 
         public List<ModelVisual3D> discList;
         public List<ModelVisual3D> hitBoxes;
+
+        private float discHeight;
+        private int poleCount;
+        private float poleRadius;
 
         private int draggingFrom;
 
@@ -155,6 +160,18 @@ namespace towers_of_hanoi
                 // return a movement onto the same tower
                 return (draggingFrom, draggingFrom);
             }
+        }
+
+        public void MoveDisc(int discIndex, int targetPole, int discCountOnTargetPole)
+        {
+            // move the disc
+            Transform3DGroup transform = new Transform3DGroup();
+            transform.Children.Add(new TranslateTransform3D()
+            {
+                OffsetX = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5,
+                OffsetY = discCountOnTargetPole * discHeight
+            });
+            discList[discList.Count - discIndex].Transform = transform;
         }
 
         private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, System.Windows.Media.Color colour)
@@ -488,6 +505,8 @@ namespace towers_of_hanoi
             viewport.Children.Clear();
             discList.Clear();
             hitBoxes.Clear();
+            this.discHeight = discHeight;
+            this.poleCount = poleCount;
 
             // setup the lighting
             DirectionalLight light = new DirectionalLight();
@@ -504,17 +523,17 @@ namespace towers_of_hanoi
 
             System.Windows.Media.Color[] colours = { Colors.Red, Colors.Orange, Colors.Yellow, Colors.Green, Colors.Blue, Colors.Purple };
             _cameraTarget.Y = (1 - Math.Sqrt(2) / 2) * discHeight * discCount;
+            poleRadius = discCount + discHeight + 1;
             for (int poleNumber = 0; poleNumber < poleCount; poleNumber++)
             {
-                float radius = discCount + discHeight + 1;
-                float horizontalMargin = radius * 0.5f;
-                float verticalMargin = radius * 0.5f;
-                ModelVisual3D pole = CreatePole(radius, discCount * discHeight + discHeight, discHeight, 1, 0.5f, (int)(radius * 8), Colors.Blue);
-                ModelVisual3D hitBox = CreateHitbox(radius * 2 + horizontalMargin, discCount * discHeight + discHeight + verticalMargin, radius * 2 + horizontalMargin);
+                float horizontalMargin = poleRadius * 0.5f;
+                float verticalMargin = poleRadius * 0.5f;
+                ModelVisual3D pole = CreatePole(poleRadius, discCount * discHeight + discHeight, discHeight, 1, 0.5f, (int)(poleRadius * 8), Colors.Blue);
+                ModelVisual3D hitBox = CreateHitbox(poleRadius * 2 + horizontalMargin, discCount * discHeight + discHeight + verticalMargin, poleRadius * 2 + horizontalMargin);
                 Transform3DGroup transform = new Transform3DGroup();
                 transform.Children.Add(new TranslateTransform3D()
                 {
-                    OffsetX = (-(float)(poleCount - 1) / 2 + poleNumber) * radius * 2.5,
+                    OffsetX = (-(float)(poleCount - 1) / 2 + poleNumber) * poleRadius * 2.5,
                     OffsetY = -discHeight * 1.5
                 });
                 pole.Transform = transform;
