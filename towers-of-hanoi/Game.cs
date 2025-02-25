@@ -136,7 +136,10 @@ namespace towers_of_hanoi
                 if (poles[endIndex].Count == 0 || poles[endIndex].Peek() > disc)
                 {
                     poles[endIndex].Push(disc);
-                    _movesTaken++;
+                    if (startIndex != endIndex)
+                    {
+                        _movesTaken++;
+                    }
                     // check if the game is won
                     if (endIndex == endPole && poles[endPole].Count == discCount)
                     {

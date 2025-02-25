@@ -10,6 +10,55 @@
         <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                     MouseMove="ViewportMouseMoved" MouseWheel="ViewportMouseScrolled"
                     MouseLeftButtonDown="ViewportLeftMouseDown" MouseLeftButtonUp="ViewportLeftMouseUp"/>
-        <TextBox Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" TextChanged="DiscCountChanged" Name="DiscCount">6</TextBox>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Top"
+              MinWidth="200" MinHeight="70" MaxWidth="250">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                    Width="50" Height="50"
+                    CornerRadius="0,0,0,20"
+                    BorderBrush="Black" BorderThickness="1,0,1,1">
+                <Button Background="Transparent" BorderBrush="Transparent">Pause</Button>
+            </Border>
+            <Border Grid.Column="1"
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                MinWidth="100" MinHeight="70" MaxWidth="150"
+                CornerRadius="0,0,20,20"
+                BorderBrush="Black" BorderThickness="1,0,1,1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5">Poles:</TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="1" 
+                             HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"
+                             MinWidth="30"
+                             TextChanged="CountsChanged" Name="PoleCount">3</TextBox>
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5">Discs:</TextBlock>
+                    <TextBox Grid.Row="1" Grid.Column="1" 
+                             HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"
+                             MinWidth="30"
+                             TextChanged="CountsChanged" Name="DiscCount">6</TextBox>
+                </Grid>
+            </Border>
+            <Border Grid.Column="2"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                    Width="50" Height="50"
+                    CornerRadius="0,0,20,0"
+                    BorderBrush="Black" BorderThickness="1,0,1,1">
+                <Button Background="Transparent" BorderBrush="Transparent">Menu</Button>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

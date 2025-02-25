@@ -24,6 +24,7 @@ namespace towers_of_hanoi
         bool rightMouseDownLast;
 
         int discCount = 6;
+        int poleCount = 3;
         float discHeight = 2;
 
         public MainWindow()
@@ -84,19 +85,23 @@ namespace towers_of_hanoi
                 if (game.GameWon)
                 {
                     MessageBox.Show("You won in " + game.MovesTaken.ToString() + " moves!");
-                    game = new Game(3, discCount, 0, 2);
-                    scene.Reset(discCount, 3, 0, discHeight);
+                    game = new Game(poleCount, discCount, 0, 2);
+                    scene.Reset(discCount, poleCount, 0, discHeight);
                 }
             }
         }
 
-        private void DiscCountChanged(object sender, EventArgs e)
+        private void CountsChanged(object sender, EventArgs e)
         {
-            if (Int32.TryParse(DiscCount.Text, out int count) && count <= 20 && scene != null)
+            if (Int32.TryParse(PoleCount.Text, out int pCount) && pCount <= 10 && scene != null)
             {
-                discCount = count;
-                game = new Game(3, discCount, 0, 2);
-                scene.Reset(discCount, 3, 0, discHeight);
+                poleCount = pCount;
+                if (Int32.TryParse(DiscCount.Text, out int count) && count <= 20)
+                {
+                    discCount = count;
+                    game = new Game(poleCount, discCount, 0, 2);
+                    scene.Reset(discCount, poleCount, 0, discHeight);
+                }
             }
         }
     }
