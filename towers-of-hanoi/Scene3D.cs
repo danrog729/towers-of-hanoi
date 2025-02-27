@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO.Packaging;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Numerics;
@@ -12,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
+using System.Windows.Navigation;
 
 namespace towers_of_hanoi
 {
@@ -42,6 +44,26 @@ namespace towers_of_hanoi
         private float poleRadius;
 
         private int draggingFrom;
+        public int DraggingFrom
+        {
+            get => draggingFrom;
+            set
+            {
+                return;
+            }
+        }
+
+        public int DraggingLastOver;
+
+        private bool _validDragDrop;
+        public bool ValidDragDrop
+        {
+            get => _validDragDrop;
+            set
+            {
+                return;
+            }
+        }
 
         public Scene3D(Viewport3D Viewport)
         {
@@ -124,6 +146,7 @@ namespace towers_of_hanoi
         public void SelectObjectForDragAndDrop(System.Windows.Point clickPosition)
         {
             HitTestResult result = VisualTreeHelper.HitTest(viewport, clickPosition);
+            _validDragDrop = false;
 
             if (result is RayMeshGeometry3DHitTestResult meshResult)
             {
@@ -131,8 +154,24 @@ namespace towers_of_hanoi
                 if (hitModel != null && hitBoxes.Contains(meshResult.VisualHit))
                 {
                     draggingFrom = hitBoxes.IndexOf((ModelVisual3D)meshResult.VisualHit);
+                    _validDragDrop = true;
                 }
             }
+        }
+
+        public int MoveDragAndDrop(System.Windows.Point clickPosition)
+        {
+            HitTestResult result = VisualTreeHelper.HitTest(viewport, clickPosition);
+
+            if (result is RayMeshGeometry3DHitTestResult meshResult)
+            {
+                GeometryModel3D? hitModel = meshResult.ModelHit as GeometryModel3D;
+                if (hitModel != null && hitBoxes.Contains(meshResult.VisualHit))
+                {
+                    return hitBoxes.IndexOf((ModelVisual3D)meshResult.VisualHit);
+                }
+            }
+            return -1;
         }
 
         public (int,int) ReleaseDragAndDrop(System.Windows.Point clickPosition)
@@ -140,6 +179,7 @@ namespace towers_of_hanoi
             HitTestResult result = VisualTreeHelper.HitTest(viewport, clickPosition);
             int draggingTo = 0;
             bool valid = false;
+            _validDragDrop = false;
 
             if (result is RayMeshGeometry3DHitTestResult meshResult)
             {
@@ -162,7 +202,19 @@ namespace towers_of_hanoi
             }
         }
 
-        public void MoveDisc(int discIndex, int targetPole, int discCountOnTargetPole)
+        public void HoverDisc(int discIndex, int targetPole)
+        {
+            // move the disc above the pole its on
+            Transform3DGroup transform = new Transform3DGroup();
+            transform.Children.Add(new TranslateTransform3D()
+            {
+                OffsetX = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5,
+                OffsetY = discList.Count * discHeight + discHeight
+            });
+            discList[discList.Count - discIndex].Transform = transform;
+        }
+
+        public void DropDisc(int discIndex, int targetPole, int discCountOnTargetPole)
         {
             // move the disc
             Transform3DGroup transform = new Transform3DGroup();
