@@ -7,9 +7,10 @@
         mc:Ignorable="d"
         Title="Towers of Hanoi" Height="600" Width="800">
     <Grid>
-        <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+        <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="True"
                     MouseMove="ViewportMouseMoved" MouseWheel="ViewportMouseScrolled"
-                    MouseLeftButtonDown="ViewportLeftMouseDown" MouseLeftButtonUp="ViewportLeftMouseUp"/>
+                    MouseLeftButtonDown="ViewportLeftMouseDown" MouseLeftButtonUp="ViewportLeftMouseUp"
+                    KeyUp="ViewportKeyUp"/>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top"
               MinWidth="200" MinHeight="70" MaxWidth="250">
             <Grid.ColumnDefinitions>

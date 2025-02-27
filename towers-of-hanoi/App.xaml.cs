@@ -9,6 +9,8 @@ namespace towers_of_hanoi
     /// </summary>
     public partial class App : Application
     {
-    }
+        public static App MainApp => ((App)Current);
 
+        public float animationSpeed = 1;
+    }
 }

@@ -160,6 +160,12 @@ namespace towers_of_hanoi
             }
         }
 
+        public void SelectDirectMove(int poleNumber)
+        {
+            _validDragDrop = true;
+            draggingFrom = poleNumber;
+        }
+
         public int MoveDragAndDrop(System.Windows.Point clickPosition)
         {
             HitTestResult result = VisualTreeHelper.HitTest(viewport, clickPosition);
@@ -203,6 +209,11 @@ namespace towers_of_hanoi
             }
         }
 
+        public void ReleaseDirectMove()
+        {
+            _validDragDrop = false;
+        }
+
         public void HoverDisc(int discIndex, int targetPole)
         {
             // move the disc above the pole its on
@@ -216,13 +227,13 @@ namespace towers_of_hanoi
                     DoubleAnimation xOffset = new DoubleAnimation();
                     xOffset.From = oldTransform.OffsetX;
                     xOffset.To = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5;
-                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.08 / App.MainApp.animationSpeed));
                     xOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
 
                     DoubleAnimation yOffset = new DoubleAnimation();
                     yOffset.From = oldTransform.OffsetY;
-                    yOffset.To = discList.Count * discHeight + discHeight;
-                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    yOffset.To = discList.Count * discHeight + 2 * discHeight;
+                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1 / App.MainApp.animationSpeed));
                     yOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
 
                     oldTransform.BeginAnimation(TranslateTransform3D.OffsetXProperty, xOffset);
@@ -244,13 +255,13 @@ namespace towers_of_hanoi
                     DoubleAnimation xOffset = new DoubleAnimation();
                     xOffset.From = oldTransform.OffsetX;
                     xOffset.To = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5;
-                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1 / App.MainApp.animationSpeed));
                     xOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
 
                     DoubleAnimation yOffset = new DoubleAnimation();
                     yOffset.From = oldTransform.OffsetY;
                     yOffset.To = discCountOnTargetPole * discHeight;
-                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.3 / App.MainApp.animationSpeed));
                     yOffset.EasingFunction = new BounceEase { Bounces = 3, Bounciness = 5, EasingMode = EasingMode.EaseOut };
 
                     oldTransform.BeginAnimation(TranslateTransform3D.OffsetXProperty, xOffset);
@@ -697,7 +708,7 @@ namespace towers_of_hanoi
             {
                 float horizontalMargin = poleRadius * 0.5f;
                 float verticalMargin = poleRadius * 0.5f;
-                ModelVisual3D pole = CreatePole(poleRadius, discCount * discHeight + discHeight, discHeight, 1, 0.5f, (int)(poleRadius * 8), 0.2f, Colors.Blue);
+                ModelVisual3D pole = CreatePole(poleRadius, discCount * discHeight + 2 * discHeight, discHeight, 1, 0.5f, (int)(poleRadius * 8), 0.2f, Colors.Blue);
                 ModelVisual3D hitBox = CreateHitbox(poleRadius * 2 + horizontalMargin, discCount * discHeight + discHeight + verticalMargin, poleRadius * 2 + horizontalMargin);
                 Transform3DGroup transform = new Transform3DGroup();
                 transform.Children.Add(new TranslateTransform3D()
