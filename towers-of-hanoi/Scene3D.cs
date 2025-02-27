@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -205,25 +206,57 @@ namespace towers_of_hanoi
         public void HoverDisc(int discIndex, int targetPole)
         {
             // move the disc above the pole its on
-            Transform3DGroup transform = new Transform3DGroup();
-            transform.Children.Add(new TranslateTransform3D()
+
+            Transform3DGroup? transformGroup = discList[discList.Count - discIndex].Transform as Transform3DGroup;
+            if (transformGroup != null)
             {
-                OffsetX = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5,
-                OffsetY = discList.Count * discHeight + discHeight
-            });
-            discList[discList.Count - discIndex].Transform = transform;
+                TranslateTransform3D? oldTransform = transformGroup.Children[0] as TranslateTransform3D;
+                if (oldTransform != null)
+                {
+                    DoubleAnimation xOffset = new DoubleAnimation();
+                    xOffset.From = oldTransform.OffsetX;
+                    xOffset.To = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5;
+                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    xOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
+
+                    DoubleAnimation yOffset = new DoubleAnimation();
+                    yOffset.From = oldTransform.OffsetY;
+                    yOffset.To = discList.Count * discHeight + discHeight;
+                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    yOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
+
+                    oldTransform.BeginAnimation(TranslateTransform3D.OffsetXProperty, xOffset);
+                    oldTransform.BeginAnimation(TranslateTransform3D.OffsetYProperty, yOffset);
+                }
+            }
         }
 
         public void DropDisc(int discIndex, int targetPole, int discCountOnTargetPole)
         {
             // move the disc
-            Transform3DGroup transform = new Transform3DGroup();
-            transform.Children.Add(new TranslateTransform3D()
+
+            Transform3DGroup? transformGroup = discList[discList.Count - discIndex].Transform as Transform3DGroup;
+            if (transformGroup != null)
             {
-                OffsetX = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5,
-                OffsetY = discCountOnTargetPole * discHeight
-            });
-            discList[discList.Count - discIndex].Transform = transform;
+                TranslateTransform3D? oldTransform = transformGroup.Children[0] as TranslateTransform3D;
+                if (oldTransform != null)
+                {
+                    DoubleAnimation xOffset = new DoubleAnimation();
+                    xOffset.From = oldTransform.OffsetX;
+                    xOffset.To = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5;
+                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    xOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
+
+                    DoubleAnimation yOffset = new DoubleAnimation();
+                    yOffset.From = oldTransform.OffsetY;
+                    yOffset.To = discCountOnTargetPole * discHeight;
+                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+                    yOffset.EasingFunction = new BounceEase { Bounces = 3, Bounciness = 5, EasingMode = EasingMode.EaseOut };
+
+                    oldTransform.BeginAnimation(TranslateTransform3D.OffsetXProperty, xOffset);
+                    oldTransform.BeginAnimation(TranslateTransform3D.OffsetYProperty, yOffset);
+                }
+            }
         }
 
         private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, System.Windows.Media.Color colour)
@@ -308,7 +341,7 @@ namespace towers_of_hanoi
             return visual;
         }
 
-        private ModelVisual3D CreatePole(float width, float height, float baseHeight, float radius, float innerRadius, int segments, System.Windows.Media.Color colour)
+        private ModelVisual3D CreatePole(float width, float height, float baseHeight, float radius, float innerRadius, int segments, float bevel, System.Windows.Media.Color colour)
         {
             MeshGeometry3D pole = new MeshGeometry3D();
 
@@ -324,6 +357,20 @@ namespace towers_of_hanoi
                     vertical,
                     horizontal * Math.Sin(majorDeltaTheta * crossSection)));
 
+                horizontal = innerRadius + bevel;
+                vertical = height;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = radius - bevel;
+                vertical = height;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
                 horizontal = radius;
                 vertical = height;
                 pole.Positions.Add(new Point3D(
@@ -332,6 +379,34 @@ namespace towers_of_hanoi
                     horizontal * Math.Sin(majorDeltaTheta * crossSection)));
 
                 horizontal = radius;
+                vertical = height - bevel;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = radius;
+                vertical = baseHeight + bevel;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = radius;
+                vertical = baseHeight;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = radius + bevel;
+                vertical = baseHeight;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = width - bevel;
                 vertical = baseHeight;
                 pole.Positions.Add(new Point3D(
                     horizontal * Math.Cos(majorDeltaTheta * crossSection),
@@ -346,6 +421,34 @@ namespace towers_of_hanoi
                     horizontal * Math.Sin(majorDeltaTheta * crossSection)));
 
                 horizontal = width;
+                vertical = baseHeight - bevel;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = width;
+                vertical = bevel;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = width;
+                vertical = 0;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = width - bevel;
+                vertical = 0;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = innerRadius + bevel;
                 vertical = 0;
                 pole.Positions.Add(new Point3D(
                     horizontal * Math.Cos(majorDeltaTheta * crossSection),
@@ -358,10 +461,24 @@ namespace towers_of_hanoi
                     horizontal * Math.Cos(majorDeltaTheta * crossSection),
                     vertical,
                     horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = innerRadius;
+                vertical = bevel;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
+                horizontal = innerRadius;
+                vertical = height - bevel;
+                pole.Positions.Add(new Point3D(
+                    horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                    vertical,
+                    horizontal * Math.Sin(majorDeltaTheta * crossSection)));
             }
 
             // join the vertices into faces
-            int crossSectionResolution = 6;
+            int crossSectionResolution = 18;
             for (int vertex = 0; vertex < pole.Positions.Count; vertex++)
             {
                 // triangulate with the previous ring's analog and the one before it
@@ -580,7 +697,7 @@ namespace towers_of_hanoi
             {
                 float horizontalMargin = poleRadius * 0.5f;
                 float verticalMargin = poleRadius * 0.5f;
-                ModelVisual3D pole = CreatePole(poleRadius, discCount * discHeight + discHeight, discHeight, 1, 0.5f, (int)(poleRadius * 8), Colors.Blue);
+                ModelVisual3D pole = CreatePole(poleRadius, discCount * discHeight + discHeight, discHeight, 1, 0.5f, (int)(poleRadius * 8), 0.2f, Colors.Blue);
                 ModelVisual3D hitBox = CreateHitbox(poleRadius * 2 + horizontalMargin, discCount * discHeight + discHeight + verticalMargin, poleRadius * 2 + horizontalMargin);
                 Transform3DGroup transform = new Transform3DGroup();
                 transform.Children.Add(new TranslateTransform3D()
