@@ -1,0 +1,15 @@
+﻿<Window x:Class="towers_of_hanoi.NavigationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:towers_of_hanoi"
+        mc:Ignorable="d"
+        Title="NavigationWindow" Height="600" Width="450"
+        WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner"
+        MouseDown="DragWindow" KeyUp="WindowKeyUp">
+
+    <Grid Margin="20">
+        <Frame Name="NavigationFrame" Source="MainMenu.xaml"/>
+    </Grid>
+</Window>

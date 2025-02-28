@@ -9,30 +9,36 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace towers_of_hanoi
 {
     /// <summary>
-    /// Interaction logic for MainMenu.xaml
+    /// Interaction logic for NavigationWindow.xaml
     /// </summary>
-    public partial class MainMenu : Page
+    public partial class NavigationWindow : Window
     {
-        public MainMenu()
+        public NavigationWindow()
         {
             InitializeComponent();
         }
 
-        private void ResumeClicked(object sender, EventArgs e)
+        private void DragWindow(object sender, MouseButtonEventArgs e)
         {
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                DragMove();
+            }
         }
 
-        private void QuitClicked(object sender, EventArgs e)
+        private void WindowKeyUp(object sender, KeyEventArgs e)
         {
-            App.MainApp.Shutdown();
+            if (e.Key == Key.Escape)
+            {
+                Hide();
+            }
         }
     }
 }

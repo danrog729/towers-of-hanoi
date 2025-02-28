@@ -23,7 +23,8 @@ namespace towers_of_hanoi
         Point lastMousePos;
         bool rightMouseDownLast;
 
-        MainMenu mainMenu;
+        public NavigationWindow navigationWindow;
+        bool mainMenuOpened;
 
         int discCount = 6;
         int poleCount = 3;
@@ -37,13 +38,36 @@ namespace towers_of_hanoi
             scene.Reset(discCount, 3, 0, discHeight);
             lastMousePos = new Point(0, 0);
             rightMouseDownLast = false;
-            mainMenu = new MainMenu();
+
+            navigationWindow = new NavigationWindow();
+            navigationWindow.Hide();
+            mainMenuOpened = false;
+
             App.MainApp.animationSpeed = 1.0f;
         }
 
         private void WindowClosing(object sender, EventArgs e)
         {
-            mainMenu.Close();
+            navigationWindow.Close();
+        }
+
+        private void WindowKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                if (navigationWindow.Visibility == Visibility.Hidden)
+                {
+                    if (!mainMenuOpened)
+                    {
+                        navigationWindow.Owner = this;
+                    }
+                    navigationWindow.ShowDialog();
+                }
+                else
+                {
+                    navigationWindow.Hide();
+                }
+            }
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
@@ -51,7 +75,7 @@ namespace towers_of_hanoi
             if (e.RightButton.Equals(MouseButtonState.Pressed))
             {
                 // move camera
-                mainMenu.Hide();
+                navigationWindow.Hide();
                 System.Windows.Point currentPos = e.GetPosition(Viewport);
                 if (rightMouseDownLast)
                 {
@@ -71,7 +95,7 @@ namespace towers_of_hanoi
             if (e.LeftButton.Equals(MouseButtonState.Pressed))
             {
                 // potentially drag-dropping
-                mainMenu.Hide();
+                navigationWindow.Hide();
                 System.Windows.Point currentPos = e.GetPosition(Viewport);
                 if (scene.ValidDragDrop)
                 {
@@ -96,7 +120,7 @@ namespace towers_of_hanoi
         {
             // drag and drop
             Viewport.Focus();
-            mainMenu.Hide();
+            navigationWindow.Hide();
             System.Windows.Point currentPos = e.GetPosition(Viewport);
             scene.SelectObjectForDragAndDrop(currentPos);
             if (scene.ValidDragDrop && game.NumberOnPole(scene.DraggingFrom) != 0)
@@ -110,7 +134,7 @@ namespace towers_of_hanoi
         {
             // figure out the move thats just been played
             Viewport.Focus();
-            mainMenu.Hide();
+            navigationWindow.Hide();
             System.Windows.Point currentPos = e.GetPosition(Viewport);
             (int, int) move = scene.ReleaseDragAndDrop(currentPos);
 
@@ -125,10 +149,13 @@ namespace towers_of_hanoi
                 if (poleNumber == -1) poleNumber = 9;
                 if (poleNumber < poleCount)
                 {
-                    if (!scene.ValidDragDrop && game.NumberOnPole(poleNumber) != 0)
+                    if (!scene.ValidDragDrop)
                     {
-                        scene.SelectDirectMove(poleNumber);
-                        scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
+                        if (game.NumberOnPole(poleNumber) != 0)
+                        {
+                            scene.SelectDirectMove(poleNumber);
+                            scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
+                        }
                     }
                     else
                     {
@@ -155,7 +182,18 @@ namespace towers_of_hanoi
 
         private void MenuClicked(object sender, EventArgs e)
         {
-            mainMenu.Show();
+            if (navigationWindow.Visibility == Visibility.Hidden)
+            {
+                if (!mainMenuOpened)
+                {
+                    navigationWindow.Owner = this;
+                }
+                navigationWindow.ShowDialog();
+            }
+            else
+            {
+                navigationWindow.Hide();
+            }
         }
 
         private void MoveDisc((int, int) move)

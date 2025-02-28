@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:towers_of_hanoi"
         mc:Ignorable="d"
         Title="Towers of Hanoi" Height="600" Width="800"
-        Closing="WindowClosing">
+        WindowStyle="None" WindowState="Maximized"
+        Closing="WindowClosing" KeyUp="WindowKeyUp">
     <Grid>
         <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="True"
                     MouseMove="ViewportMouseMoved" MouseWheel="ViewportMouseScrolled"

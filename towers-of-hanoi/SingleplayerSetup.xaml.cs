@@ -16,23 +16,13 @@ using System.Windows.Shapes;
 namespace towers_of_hanoi
 {
     /// <summary>
-    /// Interaction logic for MainMenu.xaml
+    /// Interaction logic for SingleplayerSetup.xaml
     /// </summary>
-    public partial class MainMenu : Page
+    public partial class SingleplayerSetup : Page
     {
-        public MainMenu()
+        public SingleplayerSetup()
         {
             InitializeComponent();
-        }
-
-        private void ResumeClicked(object sender, EventArgs e)
-        {
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
-        }
-
-        private void QuitClicked(object sender, EventArgs e)
-        {
-            App.MainApp.Shutdown();
         }
     }
 }
