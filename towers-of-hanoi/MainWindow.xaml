@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:towers_of_hanoi"
         mc:Ignorable="d"
-        Title="Towers of Hanoi" Height="600" Width="800">
+        Title="Towers of Hanoi" Height="600" Width="800"
+        Closing="WindowClosing">
     <Grid>
         <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="True"
                     MouseMove="ViewportMouseMoved" MouseWheel="ViewportMouseScrolled"
@@ -58,7 +59,7 @@
                     Width="50" Height="50"
                     CornerRadius="0,0,20,0"
                     BorderBrush="Black" BorderThickness="1,0,1,1">
-                <Button Background="Transparent" BorderBrush="Transparent">Menu</Button>
+                <Button Background="Transparent" BorderBrush="Transparent" Click="MenuClicked">Menu</Button>
             </Border>
         </Grid>
     </Grid>

@@ -23,6 +23,8 @@ namespace towers_of_hanoi
         Point lastMousePos;
         bool rightMouseDownLast;
 
+        MainMenu mainMenu;
+
         int discCount = 6;
         int poleCount = 3;
         float discHeight = 2;
@@ -35,6 +37,13 @@ namespace towers_of_hanoi
             scene.Reset(discCount, 3, 0, discHeight);
             lastMousePos = new Point(0, 0);
             rightMouseDownLast = false;
+            mainMenu = new MainMenu();
+            App.MainApp.animationSpeed = 1.0f;
+        }
+
+        private void WindowClosing(object sender, EventArgs e)
+        {
+            mainMenu.Close();
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
@@ -42,6 +51,7 @@ namespace towers_of_hanoi
             if (e.RightButton.Equals(MouseButtonState.Pressed))
             {
                 // move camera
+                mainMenu.Hide();
                 System.Windows.Point currentPos = e.GetPosition(Viewport);
                 if (rightMouseDownLast)
                 {
@@ -61,6 +71,7 @@ namespace towers_of_hanoi
             if (e.LeftButton.Equals(MouseButtonState.Pressed))
             {
                 // potentially drag-dropping
+                mainMenu.Hide();
                 System.Windows.Point currentPos = e.GetPosition(Viewport);
                 if (scene.ValidDragDrop)
                 {
@@ -85,6 +96,7 @@ namespace towers_of_hanoi
         {
             // drag and drop
             Viewport.Focus();
+            mainMenu.Hide();
             System.Windows.Point currentPos = e.GetPosition(Viewport);
             scene.SelectObjectForDragAndDrop(currentPos);
             if (scene.ValidDragDrop && game.NumberOnPole(scene.DraggingFrom) != 0)
@@ -98,6 +110,7 @@ namespace towers_of_hanoi
         {
             // figure out the move thats just been played
             Viewport.Focus();
+            mainMenu.Hide();
             System.Windows.Point currentPos = e.GetPosition(Viewport);
             (int, int) move = scene.ReleaseDragAndDrop(currentPos);
 
@@ -138,6 +151,11 @@ namespace towers_of_hanoi
                     scene.Reset(discCount, poleCount, 0, discHeight);
                 }
             }
+        }
+
+        private void MenuClicked(object sender, EventArgs e)
+        {
+            mainMenu.Show();
         }
 
         private void MoveDisc((int, int) move)

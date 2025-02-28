@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO.Packaging;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Numerics;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
 
 namespace towers_of_hanoi
 {
