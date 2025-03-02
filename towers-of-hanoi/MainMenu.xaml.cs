@@ -20,6 +20,9 @@ namespace towers_of_hanoi
     /// </summary>
     public partial class MainMenu : Page
     {
+        public static int DesiredWidth = 450;
+        public static int DesiredHeight = 600;
+
         public MainMenu()
         {
             InitializeComponent();
@@ -28,6 +31,11 @@ namespace towers_of_hanoi
         private void ResumeClicked(object sender, EventArgs e)
         {
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
+        }
+
+        private void SingleplayerClicked(object sender, EventArgs e)
+        {
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToSingleplayerSetup();
         }
 
         private void QuitClicked(object sender, EventArgs e)

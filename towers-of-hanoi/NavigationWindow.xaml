@@ -6,10 +6,8 @@
         xmlns:local="clr-namespace:towers_of_hanoi"
         mc:Ignorable="d"
         Title="NavigationWindow" Height="600" Width="450"
-        WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner"
+        WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight"
         MouseDown="DragWindow" KeyUp="WindowKeyUp">
 
-    <Grid Margin="20">
-        <Frame Name="NavigationFrame" Source="MainMenu.xaml"/>
-    </Grid>
+    <Frame NavigationUIVisibility="Hidden" Name="NavigationFrame" Source="MainMenu.xaml" Margin="20"/>
 </Window>

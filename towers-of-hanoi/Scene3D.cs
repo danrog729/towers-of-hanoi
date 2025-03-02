@@ -709,6 +709,10 @@ namespace towers_of_hanoi
                 hitBox.Transform = transform;
             }
             double startingPoleX = (-(float)(poleCount - 1) / 2 + startingPole) * (discCount + discHeight + 1) * 2.5;
+            if (poleCount == 0)
+            {
+                startingPoleX = 0;
+            }
             for (int discNumber = 0; discNumber < discCount; discNumber++)
             {
                 float radius = discCount - discNumber + discHeight + 1;
@@ -724,7 +728,14 @@ namespace towers_of_hanoi
             PerspectiveCamera? camera = viewport.Camera as PerspectiveCamera;
             if (camera != null)
             {
-                SetCameraPos((float)camera.Position.X, (float)camera.Position.Y, (float)camera.Position.Z);
+                float width = poleCount * 2 * poleRadius + (poleCount - 1) * poleRadius;
+                float z = (float)(width / (2 * Math.Tan(camera.FieldOfView / 360 * Math.PI)) + discHeight + 2);
+
+                SetCameraPos(
+                    0, 
+                    discHeight * discCount / 2, 
+                    z
+                    );
             }
         }
     }
