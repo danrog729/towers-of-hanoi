@@ -16,16 +16,16 @@ using System.Windows.Shapes;
 namespace towers_of_hanoi
 {
     /// <summary>
-    /// Interaction logic for SingleplayerSetup.xaml
+    /// Interaction logic for AutomaticSetup.xaml
     /// </summary>
-    public partial class SingleplayerSetup : Page
+    public partial class AutomaticSetup : Page
     {
         public static int DesiredWidth = 800;
         public static int DesiredHeight = 450;
 
         Scene3D discScene;
 
-        public SingleplayerSetup()
+        public AutomaticSetup()
         {
             InitializeComponent();
 
@@ -49,7 +49,7 @@ namespace towers_of_hanoi
 
         private void StartClicked(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)(App.MainApp.MainWindow)).SwitchToSingleplayer(DiscCount.Value, PoleCount.Value);
+            ((MainWindow)(App.MainApp.MainWindow)).SwitchToAutomatic(DiscCount.Value, PoleCount.Value);
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
         }

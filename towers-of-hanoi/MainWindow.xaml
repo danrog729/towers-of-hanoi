@@ -9,10 +9,7 @@
         WindowStyle="None" WindowState="Maximized"
         Closing="WindowClosing" KeyUp="WindowKeyUp">
     <Grid>
-        <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="True"
-                    MouseMove="ViewportMouseMoved" MouseWheel="ViewportMouseScrolled"
-                    MouseLeftButtonDown="ViewportLeftMouseDown" MouseLeftButtonUp="ViewportLeftMouseUp"
-                    KeyUp="ViewportKeyUp"/>
+        <Frame Name="ContentFrame" NavigationUIVisibility="Hidden"/>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top"
               Width="100" MinHeight="70">
             <Grid.ColumnDefinitions>

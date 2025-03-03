@@ -38,6 +38,11 @@ namespace towers_of_hanoi
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToSingleplayerSetup();
         }
 
+        private void AutomaticClicked(object sender, EventArgs e)
+        {
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToAutomaticSetup();
+        }
+
         private void QuitClicked(object sender, EventArgs e)
         {
             App.MainApp.Shutdown();

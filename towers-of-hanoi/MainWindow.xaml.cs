@@ -18,27 +18,18 @@ namespace towers_of_hanoi
     /// </summary>
     public partial class MainWindow : Window
     {
-        Scene3D scene;
-        Game game;
-        Point lastMousePos;
-        bool rightMouseDownLast;
-
+        public Singleplayer singleplayer;
+        public Automatic automatic;
         public NavigationWindow navigationWindow;
         bool mainMenuOpened;
-
-        public int discCount = 6;
-        public int poleCount = 3;
-        float discHeight = 2;
 
         public MainWindow()
         {
             InitializeComponent();
-            scene = new Scene3D(Viewport);
-            game = new Game(3, discCount, 0, 2);
-            scene.Reset(discCount, 3, 0, discHeight);
-            lastMousePos = new Point(0, 0);
-            rightMouseDownLast = false;
 
+            singleplayer = new Singleplayer();
+            automatic = new Automatic();
+            ContentFrame.Content = singleplayer;
             navigationWindow = new NavigationWindow();
             navigationWindow.Hide();
             mainMenuOpened = false;
@@ -70,100 +61,16 @@ namespace towers_of_hanoi
             }
         }
 
-        private void ViewportMouseMoved(object sender, MouseEventArgs e)
+        public void SwitchToSingleplayer(int DiscCount, int PoleCount)
         {
-            if (e.RightButton.Equals(MouseButtonState.Pressed))
-            {
-                // move camera
-                navigationWindow.Hide();
-                System.Windows.Point currentPos = e.GetPosition(Viewport);
-                if (rightMouseDownLast)
-                {
-                    float deltaX = (float)(currentPos.X - lastMousePos.X);
-                    float deltaY = (float)(currentPos.Y - lastMousePos.Y);
-
-                    scene.RotateCamera(deltaX * 0.005f, deltaY * 0.005f);
-                }
-                rightMouseDownLast = true;
-                lastMousePos = currentPos;
-            }
-            else
-            {
-                rightMouseDownLast = false;
-            }
-
-            if (e.LeftButton.Equals(MouseButtonState.Pressed))
-            {
-                // potentially drag-dropping
-                navigationWindow.Hide();
-                System.Windows.Point currentPos = e.GetPosition(Viewport);
-                if (scene.ValidDragDrop)
-                {
-                    // get which pole the mouse is over, if any
-                    int overPole = scene.MoveDragAndDrop(currentPos);
-                    if (overPole != -1 && overPole != scene.DraggingLastOver && game.NumberOnPole(scene.DraggingFrom) != 0)
-                    {
-                        // hovering over a pole
-                        scene.HoverDisc(game.PeekPole(scene.DraggingFrom), overPole);
-                        scene.DraggingLastOver = overPole;
-                    }
-                }
-            }
+            singleplayer.NewSingleplayer(DiscCount, PoleCount);
+            ContentFrame.Content = singleplayer;
         }
 
-        private void ViewportMouseScrolled(object sender, MouseWheelEventArgs e)
+        public void SwitchToAutomatic(int DiscCount, int PoleCount)
         {
-            scene.ZoomCamera(e.Delta * 0.0005f);
-        }
-
-        private void ViewportLeftMouseDown(object sender, MouseEventArgs e)
-        {
-            // drag and drop
-            Viewport.Focus();
-            navigationWindow.Hide();
-            System.Windows.Point currentPos = e.GetPosition(Viewport);
-            scene.SelectObjectForDragAndDrop(currentPos);
-            if (scene.ValidDragDrop && game.NumberOnPole(scene.DraggingFrom) != 0)
-            {
-                scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
-                scene.DraggingLastOver = scene.DraggingFrom;
-            }
-        }
-
-        private void ViewportLeftMouseUp(object sender, MouseEventArgs e)
-        {
-            // figure out the move thats just been played
-            Viewport.Focus();
-            navigationWindow.Hide();
-            System.Windows.Point currentPos = e.GetPosition(Viewport);
-            (int, int) move = scene.ReleaseDragAndDrop(currentPos);
-
-            MoveDisc(move);
-        }
-
-        private void ViewportKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key >= Key.D0 && e.Key <= Key.D9 && Viewport.IsFocused)
-            {
-                int poleNumber = e.Key - Key.D1;
-                if (poleNumber == -1) poleNumber = 9;
-                if (poleNumber < poleCount)
-                {
-                    if (!scene.ValidDragDrop)
-                    {
-                        if (game.NumberOnPole(poleNumber) != 0)
-                        {
-                            scene.SelectDirectMove(poleNumber);
-                            scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
-                        }
-                    }
-                    else
-                    {
-                        MoveDisc((scene.DraggingFrom, poleNumber));
-                        scene.ReleaseDirectMove();
-                    }
-                }
-            }
+            automatic.NewAutomatic(DiscCount, PoleCount);
+            ContentFrame.Content = automatic;
         }
 
         private void MenuClicked(object sender, EventArgs e)
@@ -180,36 +87,6 @@ namespace towers_of_hanoi
             {
                 navigationWindow.Hide();
             }
-        }
-
-        private void MoveDisc((int, int) move)
-        {
-            // see if its a valid, move play it if yes
-            if (game.MoveDisc(move.Item1, move.Item2))
-            {
-                // valid move, move disc
-                scene.DropDisc(game.PeekPole(move.Item2), move.Item2, game.NumberOnPole(move.Item2) - 1);
-                if (game.GameWon)
-                {
-                    MessageBox.Show("You won in " + game.MovesTaken.ToString() + " moves!");
-                    game = new Game(poleCount, discCount, 0, poleCount - 1);
-                    scene.Reset(discCount, poleCount, 0, discHeight);
-                }
-            }
-            else if (game.NumberOnPole(move.Item1) != 0)
-            {
-                // invalid move, move the disc back to where it was
-                scene.DropDisc(game.PeekPole(move.Item1), move.Item1, game.NumberOnPole(move.Item1) - 1);
-            }
-        }
-
-        public void NewSingleplayer(int DiscCount, int PoleCount)
-        {
-            discCount = DiscCount;
-            poleCount = PoleCount;
-            scene.Reset(discCount, poleCount, 0, discHeight);
-            game = new Game(poleCount, discCount, 0, poleCount - 1);
-            Viewport.Focus();
         }
     }
 }

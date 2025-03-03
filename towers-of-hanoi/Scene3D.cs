@@ -9,6 +9,9 @@ namespace towers_of_hanoi
 {
     public class Scene3D
     {
+        public static float hoverTime = 0.1f;
+        public static float dropTime = 0.3f;
+
         private Viewport3D viewport;
 
         private Point3D _cameraTarget;
@@ -216,13 +219,13 @@ namespace towers_of_hanoi
                     DoubleAnimation xOffset = new DoubleAnimation();
                     xOffset.From = oldTransform.OffsetX;
                     xOffset.To = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5;
-                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.08 / App.MainApp.animationSpeed));
+                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(hoverTime * 0.8 / App.MainApp.animationSpeed));
                     xOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
 
                     DoubleAnimation yOffset = new DoubleAnimation();
                     yOffset.From = oldTransform.OffsetY;
                     yOffset.To = discList.Count * discHeight + 2 * discHeight;
-                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1 / App.MainApp.animationSpeed));
+                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(hoverTime / App.MainApp.animationSpeed));
                     yOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
 
                     oldTransform.BeginAnimation(TranslateTransform3D.OffsetXProperty, xOffset);
@@ -244,13 +247,13 @@ namespace towers_of_hanoi
                     DoubleAnimation xOffset = new DoubleAnimation();
                     xOffset.From = oldTransform.OffsetX;
                     xOffset.To = (-(float)(poleCount - 1) / 2 + targetPole) * poleRadius * 2.5;
-                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(0.1 / App.MainApp.animationSpeed));
+                    xOffset.Duration = new Duration(TimeSpan.FromSeconds(dropTime / 3 / App.MainApp.animationSpeed));
                     xOffset.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
 
                     DoubleAnimation yOffset = new DoubleAnimation();
                     yOffset.From = oldTransform.OffsetY;
                     yOffset.To = discCountOnTargetPole * discHeight;
-                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(0.3 / App.MainApp.animationSpeed));
+                    yOffset.Duration = new Duration(TimeSpan.FromSeconds(dropTime / App.MainApp.animationSpeed));
                     yOffset.EasingFunction = new BounceEase { Bounces = 3, Bounciness = 5, EasingMode = EasingMode.EaseOut };
 
                     oldTransform.BeginAnimation(TranslateTransform3D.OffsetXProperty, xOffset);
