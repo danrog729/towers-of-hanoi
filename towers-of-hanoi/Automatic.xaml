@@ -12,36 +12,39 @@
         <Viewport3D Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="True"
             MouseMove="ViewportMouseMoved" MouseWheel="ViewportMouseScrolled"/>
 
-        <Button Width="100" Height="50" Click="StartGame" Name="StartButton">Start</Button>
-
         <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom"
-              Width="150" MinHeight="70">
+              Width="150" Height="100">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0"
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Border Grid.Column="0" Grid.Row="1"
                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                     Width="50" Height="50"
                     CornerRadius="20,0,0,0"
                     BorderBrush="Black" BorderThickness="1,1,1,0">
                 <Button Background="Transparent" BorderBrush="Transparent" Click="PreviousClicked">Previous</Button>
             </Border>
-            <Border Grid.Column="1"
+            <Border Grid.Column="1" Grid.Row="1"
                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                     Width="50" Height="50"
                     CornerRadius="0,0,0,0"
                     BorderBrush="Black" BorderThickness="1,1,1,0">
                 <Button Background="Transparent" BorderBrush="Transparent" Click="PauseClicked">Pause</Button>
             </Border>
-            <Border Grid.Column="2"
+            <Border Grid.Column="2" Grid.Row="1"
                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                     Width="50" Height="50"
                     CornerRadius="0,20,0,0"
                     BorderBrush="Black" BorderThickness="1,1,1,0">
                 <Button Background="Transparent" BorderBrush="Transparent" Click="NextClicked">Next</Button>
             </Border>
+            <Slider Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Name="SpeedSlider" ValueChanged="SpeedChanged" Value="500" Minimum="0" Maximum="1000"></Slider>
         </Grid>
     </Grid>
 </Page>

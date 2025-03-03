@@ -37,6 +37,9 @@ namespace towers_of_hanoi
         bool readyToUnpause;
         int delay;
 
+        BackgroundWorker[] animationThreads;
+        AnimationData[] animationData;
+
         public Automatic()
         {
             InitializeComponent();
@@ -52,10 +55,21 @@ namespace towers_of_hanoi
             botThread.ProgressChanged += UpdateViewport;
             botThread.RunWorkerCompleted += DisplayWin;
 
+            animationThreads = new BackgroundWorker[discCount];
+            for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
+            {
+                animationThreads[threadIndex] = new BackgroundWorker();
+                animationThreads[threadIndex].DoWork += AnimationTimer;
+                animationThreads[threadIndex].WorkerReportsProgress = true;
+                animationThreads[threadIndex].ProgressChanged += PerformAnimation;
+                animationThreads[threadIndex].WorkerSupportsCancellation = true;
+            }
+            animationData = new AnimationData[discCount];
+
             pause = new ManualResetEventSlim(true);
-            paused = false;
-            readyToUnpause = false;
-            delay = 1000;
+            paused = true;
+            readyToUnpause = true;
+            delay = 500;
 
             App.MainApp.animationSpeed = 1.0f;
         }
@@ -92,20 +106,33 @@ namespace towers_of_hanoi
             discCount = DiscCount;
             poleCount = PoleCount;
             scene.Reset(discCount, poleCount, 0, discHeight);
+            animationThreads = new BackgroundWorker[discCount];
+            for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
+            {
+                animationThreads[threadIndex] = new BackgroundWorker();
+                animationThreads[threadIndex].DoWork += AnimationTimer;
+                animationThreads[threadIndex].WorkerReportsProgress = true;
+                animationThreads[threadIndex].ProgressChanged += PerformAnimation;
+            }
+            animationData = new AnimationData[discCount];
             game = new Game(poleCount, discCount, 0, poleCount - 1);
-            StartButton.Visibility = Visibility.Visible;
             Viewport.Focus();
         }
 
         private void PlayGame(object? sender, DoWorkEventArgs e)
         {
+            bool firstIteration = true;
             while (!game.GameWon)
             {
+                if (!firstIteration)
+                {
+                    Thread.Sleep(delay);
+                }
+                firstIteration = false;
                 (int, int) move = game.BotMove();
                 pause.Reset();
                 botThread.ReportProgress(0, move);
                 pause.Wait();
-                Thread.Sleep(delay);
             }
         }
 
@@ -116,9 +143,12 @@ namespace towers_of_hanoi
             if (nullableMove != null)
             {
                 (int, int) move = nullableMove.Value;
-                scene.HoverDisc(game.PeekPole(move.Item2), move.Item1);
-                scene.HoverDisc(game.PeekPole(move.Item2), move.Item2);
-                scene.DropDisc(game.PeekPole(move.Item2), move.Item2, game.NumberOnPole(move.Item2) - 1);
+                int disc = game.PeekPole(move.Item2);
+                int starting = move.Item1;
+                int target = move.Item2;
+                int numberOnTarget = game.NumberOnPole(move.Item2) - 1;
+                (int, int, int, int) data = (disc, starting, target, numberOnTarget);
+                AnimationSequence(data);
             }
             if (!paused)
             {
@@ -130,10 +160,53 @@ namespace towers_of_hanoi
             }
         }
 
-        private void StartGame(object sender, RoutedEventArgs e)
+        private void AnimationSequence((int,int,int,int) move)
         {
-            botThread.RunWorkerAsync();
-            StartButton.Visibility = Visibility.Hidden;
+            BackgroundWorker worker = animationThreads[move.Item1 - 1];
+            animationData[move.Item1 - 1].Disc = move.Item1;
+            animationData[move.Item1 - 1].StartingPole = move.Item2;
+            animationData[move.Item1 - 1].TargetPole = move.Item3;
+            animationData[move.Item1 - 1].NumberOnPole = move.Item4;
+            if (!worker.IsBusy)
+            {
+                worker.RunWorkerAsync(move.Item1 - 1);
+            }
+        }
+
+        private void AnimationTimer(object? sender, DoWorkEventArgs e)
+        {
+            int? nullableData = e.Argument as int?;
+            if (nullableData != null)
+            {
+                int index = nullableData.Value;
+                BackgroundWorker? worker = sender as BackgroundWorker;
+                if (worker != null)
+                {
+                    worker.ReportProgress(0, index);
+                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / App.MainApp.animationSpeed));
+                    worker.ReportProgress(1, index);
+                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / App.MainApp.animationSpeed));
+                    worker.ReportProgress(2, index);
+                }
+            }
+        }
+
+        private void PerformAnimation(object? sender, ProgressChangedEventArgs e)
+        {
+            int? nullableData = e.UserState as int?;
+            if (nullableData != null)
+            {
+                int index = nullableData.Value;
+                switch (e.ProgressPercentage)
+                {
+                    case 0:
+                        scene.HoverDisc(animationData[index].Disc, animationData[index].StartingPole); break;
+                    case 1:
+                        scene.HoverDisc(animationData[index].Disc, animationData[index].TargetPole); break;
+                    case 2:
+                        scene.DropDisc(animationData[index].Disc, animationData[index].TargetPole, animationData[index].NumberOnPole); break;
+                }
+            }
         }
 
         private void DisplayWin(object? sender, RunWorkerCompletedEventArgs e)
@@ -141,7 +214,8 @@ namespace towers_of_hanoi
             MessageBox.Show("Bot won in " + game.MovesTaken.ToString() + " moves.");
             game = new Game(poleCount, discCount, 0, poleCount - 1);
             scene.Reset(discCount, poleCount, 0, discHeight);
-            StartButton.Visibility = Visibility.Visible;
+            paused = true;
+            readyToUnpause = true;
         }
 
         private void NextClicked(object sender, RoutedEventArgs e)
@@ -151,9 +225,14 @@ namespace towers_of_hanoi
                 if (!game.GameWon)
                 {
                     (int, int) move = game.BotMove();
-                    scene.DropDisc(game.PeekPole(move.Item2), move.Item2, game.NumberOnPole(move.Item2) - 1);
+                    int disc = game.PeekPole(move.Item2);
+                    int starting = move.Item1;
+                    int target = move.Item2;
+                    int numberOnTarget = game.NumberOnPole(move.Item2) - 1;
+                    (int, int, int, int) data = (disc, starting, target, numberOnTarget);
+                    AnimationSequence(data);
                 }
-                else
+                if (game.GameWon)
                 {
                     DisplayWin(null, new RunWorkerCompletedEventArgs(null, null, false));
                 }
@@ -166,6 +245,10 @@ namespace towers_of_hanoi
             if (!paused && readyToUnpause)
             {
                 pause.Set();
+                if (!botThread.IsBusy)
+                {
+                    botThread.RunWorkerAsync();
+                }
             }
         }
 
@@ -174,8 +257,26 @@ namespace towers_of_hanoi
             if (game.moveHistory.Count > 0 && paused)
             {
                 (int, int) move = game.UndoMove();
-                scene.DropDisc(game.PeekPole(move.Item1), move.Item1, game.NumberOnPole(move.Item1) - 1);
+                int disc = game.PeekPole(move.Item1);
+                int starting = move.Item2;
+                int target = move.Item1;
+                int numberOnTarget = game.NumberOnPole(move.Item1) - 1;
+                (int, int, int, int) data = (disc, starting, target, numberOnTarget);
+                AnimationSequence(data);
             }
         }
+
+        private void SpeedChanged(object sender, RoutedEventArgs e)
+        {
+            delay = (int)(1000 - SpeedSlider.Value);
+        }
+    }
+
+    public struct AnimationData
+    {
+        public int Disc;
+        public int StartingPole;
+        public int TargetPole;
+        public int NumberOnPole;
     }
 }
