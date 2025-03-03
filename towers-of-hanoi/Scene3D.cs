@@ -262,7 +262,7 @@ namespace towers_of_hanoi
             }
         }
 
-        private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, System.Windows.Media.Color colour)
+        private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, float bevel, System.Windows.Media.Color colour)
         {
             MeshGeometry3D disc = new MeshGeometry3D();
 
@@ -272,30 +272,56 @@ namespace towers_of_hanoi
             for (int crossSection = 0; crossSection < majorSegments; crossSection++)
             {
                 // create one cross-section
+
                 // inner ring
+                double horizontal = innerRadius + height / 2 + bevel;
+                double vertical = -height / 2;
+                disc.Positions.Add(new Point3D(
+                        horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                        vertical,
+                        horizontal * Math.Sin(majorDeltaTheta * crossSection)));
                 for (int vertex = 0; vertex <= minorSegments; vertex++)
                 {
-                    double horizontal = innerRadius + height / 2 - Math.Sin(minorDeltaTheta * vertex) * height / 2;
-                    double vertical = -Math.Cos(minorDeltaTheta * vertex) * height / 2;
+                    horizontal = innerRadius + height / 2 - Math.Sin(minorDeltaTheta * vertex) * height / 2;
+                    vertical = -Math.Cos(minorDeltaTheta * vertex) * height / 2;
                     disc.Positions.Add(new Point3D(
                         horizontal * Math.Cos(majorDeltaTheta * crossSection), 
                         vertical, 
                         horizontal * Math.Sin(majorDeltaTheta * crossSection)));
                 }
+                horizontal = innerRadius + height / 2 + bevel;
+                vertical = height / 2;
+                disc.Positions.Add(new Point3D(
+                        horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                        vertical,
+                        horizontal * Math.Sin(majorDeltaTheta * crossSection)));
+
                 // outer ring
+                horizontal = radius - height / 2 - bevel;
+                vertical = height / 2;
+                disc.Positions.Add(new Point3D(
+                        horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                        vertical,
+                        horizontal * Math.Sin(majorDeltaTheta * crossSection)));
                 for (int vertex = 0; vertex <= minorSegments; vertex++)
                 {
-                    double horizontal = radius - height / 2 + Math.Sin(minorDeltaTheta * vertex) * height / 2;
-                    double vertical = Math.Cos(minorDeltaTheta * vertex) * height / 2;
+                    horizontal = radius - height / 2 + Math.Sin(minorDeltaTheta * vertex) * height / 2;
+                    vertical = Math.Cos(minorDeltaTheta * vertex) * height / 2;
                     disc.Positions.Add(new Point3D(
                         horizontal * Math.Cos(majorDeltaTheta * crossSection), 
                         vertical, 
                         horizontal * Math.Sin(majorDeltaTheta * crossSection)));
                 }
+                horizontal = radius - height / 2 - bevel;
+                vertical = -height / 2;
+                disc.Positions.Add(new Point3D(
+                        horizontal * Math.Cos(majorDeltaTheta * crossSection),
+                        vertical,
+                        horizontal * Math.Sin(majorDeltaTheta * crossSection)));
             }
 
             // join the vertices into faces
-            int crossSectionResolution = minorSegments * 2 + 2;
+            int crossSectionResolution = minorSegments * 2 + 6;
             for (int vertex = 0; vertex < disc.Positions.Count; vertex++)
             {
                 // triangulate with the previous ring's analog and the one before it
@@ -719,7 +745,7 @@ namespace towers_of_hanoi
             for (int discNumber = 0; discNumber < discCount; discNumber++)
             {
                 float radius = discCount - discNumber + discHeight + 1;
-                ModelVisual3D disc = CreateDisc(radius, 2, 1, (int)(radius * 8), 8, colours[discNumber % colours.Length]);
+                ModelVisual3D disc = CreateDisc(radius, 2, 1, (int)(radius * 8), 8, 0.2f, colours[discNumber % colours.Length]);
                 Transform3DGroup transform = new Transform3DGroup();
                 transform.Children.Add(new TranslateTransform3D()
                 {
