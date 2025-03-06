@@ -23,9 +23,9 @@
                 <ColumnDefinition MinWidth="100" Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <TreeView>
-                
-            </TreeView>
+            <TreeView Name="SettingsTree"/>
+
+
 
             <StackPanel Grid.Column="2">
                 <local_settings:FloatSlider MinValue="-1" MaxValue="10" Value="1"/>

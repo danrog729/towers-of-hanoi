@@ -13,10 +13,4 @@ namespace towers_of_hanoi
 
         public static Preferences preferences = new Preferences();
     }
-
-    public class Preferences
-    {
-        public float animationSpeed = 1;
-
-    }
 }

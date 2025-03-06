@@ -60,6 +60,7 @@ namespace towers_of_hanoi.SettingsControls
             set => SetValue(MaxValueProperty, value);
         }
 
+        private bool changingText = false;
         public event EventHandler ValueChanged = delegate { };
 
         public FloatSlider()
@@ -96,7 +97,36 @@ namespace towers_of_hanoi.SettingsControls
         private void InputSliderValueChanged(object sender, EventArgs e)
         {
             Value = (float)(InputSlider.Value);
+            changingText = true;
             InputTextBox.Text = string.Format("{0:0.00}", InputSlider.Value);
+        }
+
+        private void PreviewInputTextInput(object sender, TextCompositionEventArgs e)
+        {
+            for (int index = 0; index < e.Text.Length; index++)
+            {
+                if (e.Text[index] != '.' && e.Text[index] != '-' && (e.Text[index] < '0' || e.Text[index] > '9'))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+        }
+
+        private void InputTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!changingText)
+            {
+                // actually do something, else just trust the rest of the component to put a valid float in
+                if (double.TryParse(InputTextBox.Text, out double value))
+                {
+                    Value = value;
+                }
+            }
+            else
+            {
+                changingText = false;
+            }
         }
     }
 }
