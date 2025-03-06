@@ -33,8 +33,6 @@ namespace towers_of_hanoi
             navigationWindow = new NavigationWindow();
             navigationWindow.Hide();
             mainMenuOpened = false;
-
-            App.MainApp.animationSpeed = 1.0f;
         }
 
         private void WindowClosing(object sender, EventArgs e)

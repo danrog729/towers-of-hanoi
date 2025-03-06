@@ -1,0 +1,43 @@
+﻿<Page x:Class="towers_of_hanoi.Settings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:towers_of_hanoi"
+      xmlns:local_settings="clr-namespace:towers_of_hanoi.SettingsControls"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="450"
+      Title="Settings">
+
+    <Grid Height="600" Width="450">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="100" Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition MinWidth="100" Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <TreeView>
+                
+            </TreeView>
+
+            <StackPanel Grid.Column="2">
+                <local_settings:FloatSlider MinValue="-1" MaxValue="10" Value="1"/>
+            </StackPanel>
+
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
+
+        <TextBlock Grid.Row="0">Settings</TextBlock>
+
+        <Button Grid.Row="2" Width="100" HorizontalAlignment="Left" Click="BackClicked">Back</Button>
+        <Button Grid.Row="2" Width="100" HorizontalAlignment="Right">Confirm</Button>
+
+    </Grid>
+</Page>

@@ -11,6 +11,12 @@ namespace towers_of_hanoi
     {
         public static App MainApp => ((App)Current);
 
+        public static Preferences preferences = new Preferences();
+    }
+
+    public class Preferences
+    {
         public float animationSpeed = 1;
+
     }
 }

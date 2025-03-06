@@ -43,6 +43,11 @@ namespace towers_of_hanoi
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToAutomaticSetup();
         }
 
+        private void SettingsClicked(object sender, EventArgs e)
+        {
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToSettings();
+        }
+
         private void QuitClicked(object sender, EventArgs e)
         {
             App.MainApp.Shutdown();

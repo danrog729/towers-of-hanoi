@@ -24,6 +24,7 @@ namespace towers_of_hanoi
         private MainMenu mainMenu;
         private SingleplayerSetup singleplayerSetup;
         private AutomaticSetup automaticSetup;
+        private Settings settings;
 
         public NavigationWindow()
         {
@@ -31,6 +32,7 @@ namespace towers_of_hanoi
             mainMenu = new MainMenu();
             singleplayerSetup = new SingleplayerSetup();
             automaticSetup = new AutomaticSetup();
+            settings = new Settings();
             SwitchToMainMenu();
         }
 
@@ -50,7 +52,7 @@ namespace towers_of_hanoi
                 {
                     Hide();
                 }
-                else if (NavigationFrame.Content == singleplayerSetup)
+                else
                 {
                     SwitchToMainMenu();
                 }
@@ -88,6 +90,17 @@ namespace towers_of_hanoi
             automaticSetup.Height = AutomaticSetup.DesiredHeight;
 
             NavigationFrame.Content = automaticSetup;
+        }
+
+        public void SwitchToSettings()
+        {
+            Left += Width / 2 - Settings.DesiredWidth / 2 - NavigationFrame.Margin.Left;
+            Top += Height / 2 - Settings.DesiredHeight / 2 - NavigationFrame.Margin.Top;
+
+            automaticSetup.Width = Settings.DesiredWidth;
+            automaticSetup.Height = Settings.DesiredHeight;
+
+            NavigationFrame.Content = settings;
         }
     }
 }

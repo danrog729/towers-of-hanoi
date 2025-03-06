@@ -37,8 +37,6 @@ namespace towers_of_hanoi
             scene.Reset(discCount, 3, 0, discHeight);
             lastMousePos = new Point(0, 0);
             rightMouseDownLast = false;
-
-            App.MainApp.animationSpeed = 1.0f;
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
