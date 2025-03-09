@@ -70,8 +70,6 @@ namespace towers_of_hanoi
             paused = true;
             readyToUnpause = true;
             delay = 500;
-
-            App.preferences.animationSpeed = 1.0f;
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
@@ -183,9 +181,9 @@ namespace towers_of_hanoi
                 if (worker != null)
                 {
                     worker.ReportProgress(0, index);
-                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / App.preferences.animationSpeed));
+                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.Animation.animationSpeed));
                     worker.ReportProgress(1, index);
-                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / App.preferences.animationSpeed));
+                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.Animation.animationSpeed));
                     worker.ReportProgress(2, index);
                 }
             }

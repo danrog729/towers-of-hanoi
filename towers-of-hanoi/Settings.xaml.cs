@@ -84,9 +84,37 @@ namespace towers_of_hanoi
                         ])
                     ]);
             pages.Add(appearance);
-            pages.Add(new SettingsPage("Animation"));
+            pages.Add(new SettingsPage("Animation",
+                [new FloatSetting("Animation Speed", 0.01f, 1.0f, 10.0f)],
+                []));
             pages.Add(new SettingsPage("Sounds"));
             pages.Add(new SettingsPage("Controls"));
+        }
+
+        public void ChangeSettingsPage(object sender, RoutedPropertyChangedEventArgs<Object> e)
+        {
+            TreeViewItem? treeViewItem = e.NewValue as TreeViewItem;
+            if (treeViewItem != null)
+            {
+                SettingsPage? page = treeViewItem.Tag as SettingsPage;
+                if (page != null)
+                {
+                    SettingsPageContent.Children.Clear();
+                    foreach (Setting setting in page.settings)
+                    {
+                        if (setting is FloatSetting floatSetting)
+                        {
+                            SettingsPageContent.Children.Add(new SettingsControls.FloatSlider()
+                            {
+                                MinValue = floatSetting.Minimum,
+                                Value = floatSetting.Value,
+                                MaxValue = floatSetting.Maximum,
+                                SettingLabel = floatSetting.Name
+                            });
+                        }
+                    }
+                }
+            }
         }
 
         public void SetUpTree(TreeViewItem? branchItem = null, SettingsPage? branchPage = null)
@@ -99,7 +127,8 @@ namespace towers_of_hanoi
                 {
                     TreeViewItem treeViewItem = new TreeViewItem()
                     {
-                        Header = page.Name
+                        Header = page.Name,
+                        Tag = page
                     };
                     SettingsTree.Items.Add(treeViewItem);
                     SetUpTree(treeViewItem, page);
@@ -112,7 +141,8 @@ namespace towers_of_hanoi
                 {
                     TreeViewItem treeViewItem = new TreeViewItem()
                     {
-                        Header = page.Name
+                        Header = page.Name,
+                        Tag = page
                     };
                     branchItem.Items.Add(treeViewItem);
                     SetUpTree(treeViewItem, page);
@@ -176,16 +206,14 @@ namespace towers_of_hanoi
 
     public class FloatSetting : Setting
     {
+        public float Minimum;
         public float Value;
-        public FloatSetting(string name, float value) : base(name)
+        public float Maximum;
+        public FloatSetting(string name, float minimum, float value, float maximum) : base(name)
         {
+            Minimum = minimum;
             Value = value;
+            Maximum = maximum;
         }
-    }
-
-    public class Preferences
-    {
-        public float animationSpeed = 1;
-
     }
 }

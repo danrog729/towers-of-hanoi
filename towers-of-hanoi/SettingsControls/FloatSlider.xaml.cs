@@ -60,12 +60,24 @@ namespace towers_of_hanoi.SettingsControls
             set => SetValue(MaxValueProperty, value);
         }
 
+        private string _settingLabel;
+        public string SettingLabel
+        {
+            get => _settingLabel;
+            set
+            {
+                _settingLabel = value;
+                SettingText.Text = value;
+            }
+        }
+
         private bool changingText = false;
         public event EventHandler ValueChanged = delegate { };
 
         public FloatSlider()
         {
             InitializeComponent();
+            _settingLabel = "Setting";
         }
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
