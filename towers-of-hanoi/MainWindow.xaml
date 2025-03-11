@@ -8,14 +8,8 @@
         Title="Towers of Hanoi" Height="600" Width="800"
         WindowStyle="None" WindowState="Maximized"
         Closing="WindowClosing" KeyUp="WindowKeyUp">
-    <Grid>
+    <Grid Background="{DynamicResource Background}">
         <Frame Name="ContentFrame" NavigationUIVisibility="Hidden"/>
-        <Border Grid.Column="2"
-                    HorizontalAlignment="Center" VerticalAlignment="Top"
-                    Width="50" Height="50"
-                    CornerRadius="0,0,20,20"
-                    BorderBrush="Black" BorderThickness="1,0,1,1">
-            <Button Background="Transparent" BorderBrush="Transparent" Click="MenuClicked">Menu</Button>
-        </Border>
+        <Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="50" Click="MenuClicked">Menu</Button>
     </Grid>
 </Window>

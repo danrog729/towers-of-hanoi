@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="1">
-            <local_settings:FloatSlider x:Name="AnimationSpeedSlider" Label="Animation Speed" MinValue="0.01" Value="1" MaxValue="10" ValueChanged="ChangeAnimationSpeed"/>
+            <local_settings:FloatSlider x:Name="AnimationSpeedSlider" Label="Animation Speed" MinValue="0.01" Value="1" MaxValue="10" ValueChanged="SettingChanged"/>
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -25,14 +25,14 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10">Theme</TextBlock>
-                <ComboBox Name="ThemeSelector" Grid.Column="1" Margin="10" SelectionChanged="ChangeTheme"/>
+                <ComboBox Name="ThemeSelector" Grid.Column="1" Margin="10" SelectionChanged="SettingChanged"/>
             </Grid>
         </StackPanel>
 
         <TextBlock Grid.Row="0">Settings</TextBlock>
 
         <Button Grid.Row="2" Width="100" HorizontalAlignment="Left" Click="BackClicked">Back</Button>
-        <Button Grid.Row="2" Width="100" HorizontalAlignment="Right">Confirm</Button>
+        <Button Grid.Row="2" Width="100" HorizontalAlignment="Right" Click="ConfirmClicked">Confirm</Button>
 
     </Grid>
 </Page>

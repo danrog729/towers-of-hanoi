@@ -553,11 +553,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Slider">
-                    <Grid>
-                        <Canvas x:Name="TickBar"
-                                Height="4"
-                                Background="{DynamicResource Background}"
-                                HorizontalAlignment="Stretch"/>
+                    <Grid Background="Transparent">
+                        <Border BorderBrush="{DynamicResource BorderColour}" BorderThickness="{DynamicResource BorderThickness}" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <Canvas x:Name="TickBar"
+                                    Height="4"
+                                    Background="{DynamicResource Background}"
+                                    HorizontalAlignment="Stretch"/>
+                        </Border>
                         <Track x:Name="PART_Track">
                             <Track.Thumb>
                                 <Thumb Width="20" Height="20" Background="{DynamicResource Foreground}" BorderBrush="{DynamicResource BorderColour}"/>

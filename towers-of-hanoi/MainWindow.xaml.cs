@@ -61,6 +61,7 @@ namespace towers_of_hanoi
 
         public void SwitchToSingleplayer(int DiscCount, int PoleCount)
         {
+            automatic.CancelBotPlay();
             singleplayer.NewSingleplayer(DiscCount, PoleCount);
             ContentFrame.Content = singleplayer;
         }

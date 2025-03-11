@@ -9,4 +9,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Navigation\Settings\Themes\Fonts\TitilliumWeb-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Navigation\Settings\Themes\Fonts\TitilliumWeb-Regular.ttf" />
+  </ItemGroup>
+
 </Project>

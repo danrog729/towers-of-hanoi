@@ -104,11 +104,7 @@ namespace towers_of_hanoi
             discCount = DiscCount;
             poleCount = PoleCount;
             scene.Reset(discCount, poleCount, 0, discHeight);
-            // stop all animation threads
-            for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
-            {
-                animationThreads[threadIndex].CancelAsync();
-            }
+            CancelBotPlay();
             animationThreads = new BackgroundWorker[discCount];
             for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
             {
@@ -124,6 +120,15 @@ namespace towers_of_hanoi
             paused = true;
             readyToUnpause = true;
             Viewport.Focus();
+        }
+
+        public void CancelBotPlay()
+        {
+            // stop all animation threads
+            for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
+            {
+                animationThreads[threadIndex].CancelAsync();
+            }
         }
 
         private void PlayGame(object? sender, DoWorkEventArgs e)
