@@ -10,26 +10,12 @@
         Closing="WindowClosing" KeyUp="WindowKeyUp">
     <Grid>
         <Frame Name="ContentFrame" NavigationUIVisibility="Hidden"/>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Top"
-              Width="100" MinHeight="70">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="50"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Top"
+        <Border Grid.Column="2"
+                    HorizontalAlignment="Center" VerticalAlignment="Top"
                     Width="50" Height="50"
-                    CornerRadius="0,0,0,20"
+                    CornerRadius="0,0,20,20"
                     BorderBrush="Black" BorderThickness="1,0,1,1">
-                <Button Background="Transparent" BorderBrush="Transparent">Pause</Button>
-            </Border>
-            <Border Grid.Column="2"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                    Width="50" Height="50"
-                    CornerRadius="0,0,20,0"
-                    BorderBrush="Black" BorderThickness="1,0,1,1">
-                <Button Background="Transparent" BorderBrush="Transparent" Click="MenuClicked">Menu</Button>
-            </Border>
-        </Grid>
+            <Button Background="Transparent" BorderBrush="Transparent" Click="MenuClicked">Menu</Button>
+        </Border>
     </Grid>
 </Window>

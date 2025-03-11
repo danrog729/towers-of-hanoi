@@ -104,6 +104,11 @@ namespace towers_of_hanoi
             discCount = DiscCount;
             poleCount = PoleCount;
             scene.Reset(discCount, poleCount, 0, discHeight);
+            // stop all animation threads
+            for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
+            {
+                animationThreads[threadIndex].CancelAsync();
+            }
             animationThreads = new BackgroundWorker[discCount];
             for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
             {
@@ -111,9 +116,13 @@ namespace towers_of_hanoi
                 animationThreads[threadIndex].DoWork += AnimationTimer;
                 animationThreads[threadIndex].WorkerReportsProgress = true;
                 animationThreads[threadIndex].ProgressChanged += PerformAnimation;
+                animationThreads[threadIndex].WorkerSupportsCancellation = true;
             }
             animationData = new AnimationData[discCount];
             game = new Game(poleCount, discCount, 0, poleCount - 1);
+            pause = new ManualResetEventSlim(true);
+            paused = true;
+            readyToUnpause = true;
             Viewport.Focus();
         }
 
@@ -181,9 +190,17 @@ namespace towers_of_hanoi
                 if (worker != null)
                 {
                     worker.ReportProgress(0, index);
-                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.Animation.animationSpeed));
+                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.AnimationSpeed));
+                    if (e.Cancel)
+                    {
+                        return;
+                    }
                     worker.ReportProgress(1, index);
-                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.Animation.animationSpeed));
+                    Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.AnimationSpeed));
+                    if (e.Cancel)
+                    {
+                        return;
+                    }
                     worker.ReportProgress(2, index);
                 }
             }

@@ -50,7 +50,7 @@ namespace towers_of_hanoi
 
         private void QuitClicked(object sender, EventArgs e)
         {
-            App.MainApp.Shutdown();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToQuitConfirmation();
         }
     }
 }

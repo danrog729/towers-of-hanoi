@@ -25,6 +25,7 @@ namespace towers_of_hanoi
         private SingleplayerSetup singleplayerSetup;
         private AutomaticSetup automaticSetup;
         private Settings settings;
+        private QuitConfirmation quitConfirmation;
 
         public NavigationWindow()
         {
@@ -33,6 +34,7 @@ namespace towers_of_hanoi
             singleplayerSetup = new SingleplayerSetup();
             automaticSetup = new AutomaticSetup();
             settings = new Settings();
+            quitConfirmation = new QuitConfirmation();
             SwitchToMainMenu();
         }
 
@@ -101,6 +103,17 @@ namespace towers_of_hanoi
             automaticSetup.Height = Settings.DesiredHeight;
 
             NavigationFrame.Content = settings;
+        }
+
+        public void SwitchToQuitConfirmation()
+        {
+            Left += Width / 2 - QuitConfirmation.DesiredWidth / 2 - NavigationFrame.Margin.Left;
+            Top += Height / 2 - QuitConfirmation.DesiredHeight / 2 - NavigationFrame.Margin.Top;
+
+            quitConfirmation.Width = QuitConfirmation.DesiredWidth;
+            quitConfirmation.Height = QuitConfirmation.DesiredHeight;
+
+            NavigationFrame.Content = quitConfirmation;
         }
     }
 }

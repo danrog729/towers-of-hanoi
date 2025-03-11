@@ -14,7 +14,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Name="SettingText" Grid.Column="0" Margin="5" VerticalAlignment="Center">Setting</TextBlock>
+        <TextBlock Name="SettingText" Grid.Column="0" Margin="5" VerticalAlignment="Center"/>
         <TextBlock Name="OutputMinimum" Grid.Column="1" Margin="5" VerticalAlignment="Center">0</TextBlock>
         <Slider Name="InputSlider" Grid.Column="2" VerticalAlignment="Center" ValueChanged="InputSliderValueChanged"></Slider>
         <TextBlock Name="OutputMaximum" Grid.Column="3" Margin="5" VerticalAlignment="Center">1</TextBlock>

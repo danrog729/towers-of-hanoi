@@ -60,15 +60,15 @@ namespace towers_of_hanoi.SettingsControls
             set => SetValue(MaxValueProperty, value);
         }
 
-        private string _settingLabel;
-        public string SettingLabel
+        public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
+            "Label", typeof(string),
+            typeof(FloatSlider),
+            new PropertyMetadata("", OnLabelChanged)
+            );
+        public string Label
         {
-            get => _settingLabel;
-            set
-            {
-                _settingLabel = value;
-                SettingText.Text = value;
-            }
+            get => (string)GetValue(LabelProperty);
+            set => SetValue(LabelProperty, value);
         }
 
         private bool changingText = false;
@@ -77,7 +77,6 @@ namespace towers_of_hanoi.SettingsControls
         public FloatSlider()
         {
             InitializeComponent();
-            _settingLabel = "Setting";
         }
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -103,6 +102,14 @@ namespace towers_of_hanoi.SettingsControls
             {
                 control.InputSlider.Maximum = (double)(e.NewValue);
                 control.OutputMaximum.Text = string.Format("{0:0.00}", e.NewValue);
+            }
+        }
+
+        private static void OnLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FloatSlider control && control.SettingText != null)
+            {
+                control.SettingText.Text = e.NewValue.ToString();  
             }
         }
 

@@ -16,21 +16,18 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="100" Width="*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition MinWidth="100" Width="2*"/>
-            </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="1">
+            <local_settings:FloatSlider x:Name="AnimationSpeedSlider" Label="Animation Speed" MinValue="0.01" Value="1" MaxValue="10" ValueChanged="ChangeAnimationSpeed"/>
 
-            <TreeView Name="SettingsTree" SelectedItemChanged="ChangeSettingsPage"/>
-
-            <ScrollViewer Grid.Column="2">
-                <StackPanel Name="SettingsPageContent"/>
-            </ScrollViewer>
-
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10">Theme</TextBlock>
+                <ComboBox Name="ThemeSelector" Grid.Column="1" Margin="10" SelectionChanged="ChangeTheme"/>
+            </Grid>
+        </StackPanel>
 
         <TextBlock Grid.Row="0">Settings</TextBlock>
 
