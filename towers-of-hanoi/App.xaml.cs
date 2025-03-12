@@ -23,6 +23,14 @@ namespace towers_of_hanoi
                 theme.MergedDictionaries.Add(styles);
                 Resources.MergedDictionaries.Clear();
                 Resources.MergedDictionaries.Add(theme);
+
+                // recolour discs
+                if (MainApp.MainWindow != null)
+                {
+                    ((MainWindow)(MainApp.MainWindow)).singleplayer.Recolour();
+                    ((MainWindow)(MainApp.MainWindow)).navigationWindow.Recolour();
+                    ((MainWindow)(MainApp.MainWindow)).automatic.Recolour();
+                }
             }
         }
 

@@ -22,4 +22,8 @@
     <SolidColorBrush x:Key="FocusedAccentText" Color="#000000"/>
     <FontFamily x:Key="Font">Segoe UI</FontFamily>
 
+    <SolidColorBrush x:Key="DiscTop" Color="#ffffff"/>
+    <SolidColorBrush x:Key="DiscBottom" Color="#2222ff"/>
+    <SolidColorBrush x:Key="PoleColour" Color="#222222"/>
+
 </ResourceDictionary>

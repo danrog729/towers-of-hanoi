@@ -160,5 +160,10 @@ namespace towers_of_hanoi
             game = new Game(poleCount, discCount, 0, poleCount - 1);
             Viewport.Focus();
         }
+
+        public void Recolour()
+        {
+            scene.Recolour();
+        }
     }
 }

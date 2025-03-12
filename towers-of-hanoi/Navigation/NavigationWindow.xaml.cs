@@ -115,5 +115,11 @@ namespace towers_of_hanoi
 
             NavigationFrame.Content = quitConfirmation;
         }
+
+        public void Recolour()
+        {
+            singleplayerSetup.Recolour();
+            automaticSetup.Recolour();
+        }
     }
 }

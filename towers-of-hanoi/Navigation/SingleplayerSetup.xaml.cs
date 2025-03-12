@@ -41,5 +41,10 @@ namespace towers_of_hanoi
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
         }
+
+        public void Recolour()
+        {
+            discScene.Recolour();
+        }
     }
 }

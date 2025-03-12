@@ -30,6 +30,7 @@ namespace towers_of_hanoi
         }
 
         public List<ModelVisual3D> discList;
+        public List<ModelVisual3D> poleList;
         public List<ModelVisual3D> hitBoxes;
 
         private float discHeight;
@@ -68,6 +69,7 @@ namespace towers_of_hanoi
             viewport.Camera = camera;
             CameraTarget = new Point3D(0, 0, 0);
             discList = new List<ModelVisual3D>();
+            poleList = new List<ModelVisual3D>();
             hitBoxes = new List<ModelVisual3D>();
         }
 
@@ -262,7 +264,7 @@ namespace towers_of_hanoi
             }
         }
 
-        private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, float bevel, System.Windows.Media.Color colour)
+        private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, float bevel, System.Windows.Media.SolidColorBrush colour)
         {
             MeshGeometry3D disc = new MeshGeometry3D();
 
@@ -357,7 +359,7 @@ namespace towers_of_hanoi
             // wrap in a GeometryModel3D
             GeometryModel3D model = new GeometryModel3D();
             model.Geometry = disc;
-            model.Material = new DiffuseMaterial(new SolidColorBrush(colour));
+            model.Material = new DiffuseMaterial(colour);
 
             // wrap in a ModelVisual3D
             ModelVisual3D visual = new ModelVisual3D();
@@ -370,7 +372,7 @@ namespace towers_of_hanoi
             return visual;
         }
 
-        private ModelVisual3D CreatePole(float width, float height, float baseHeight, float radius, float innerRadius, int segments, float bevel, System.Windows.Media.Color colour)
+        private ModelVisual3D CreatePole(float width, float height, float baseHeight, float radius, float innerRadius, int segments, float bevel, System.Windows.Media.SolidColorBrush colour)
         {
             MeshGeometry3D pole = new MeshGeometry3D();
 
@@ -543,7 +545,7 @@ namespace towers_of_hanoi
             // wrap in a GeometryModel3D
             GeometryModel3D model = new GeometryModel3D();
             model.Geometry = pole;
-            model.Material = new DiffuseMaterial(new SolidColorBrush(colour));
+            model.Material = new DiffuseMaterial(colour);
 
             // wrap in a ModelVisual3D
             ModelVisual3D visual = new ModelVisual3D();
@@ -552,6 +554,7 @@ namespace towers_of_hanoi
             // add to the viewport
             viewport.Children.Add(visual);
 
+            poleList.Add(visual);
             return visual;
         }
 
@@ -719,14 +722,15 @@ namespace towers_of_hanoi
             // add the bounding cube
             CreateBoundingBox(1000);
 
-            System.Windows.Media.Color[] colours = { Colors.Red, Colors.Orange, Colors.Yellow, Colors.Green, Colors.Blue, Colors.Purple };
             _cameraTarget.Y = (1 - Math.Sqrt(2) / 2) * discHeight * discCount;
+
+            SolidColorBrush poleColour = (SolidColorBrush)App.MainApp.FindResource("PoleColour");
             poleRadius = discCount + discHeight + 1;
             for (int poleNumber = 0; poleNumber < poleCount; poleNumber++)
             {
                 float horizontalMargin = poleRadius * 0.5f;
                 float verticalMargin = poleRadius * 0.5f;
-                ModelVisual3D pole = CreatePole(poleRadius, discCount * discHeight + 2 * discHeight, discHeight, 1, 0.5f, (int)(poleRadius * 8), 0.2f, Colors.Blue);
+                ModelVisual3D pole = CreatePole(poleRadius, discCount * discHeight + 2 * discHeight, discHeight, 1, 0.5f, (int)(poleRadius * 8), 0.2f, poleColour);
                 ModelVisual3D hitBox = CreateHitbox(poleRadius * 2 + horizontalMargin, discCount * discHeight + discHeight + verticalMargin, poleRadius * 2 + horizontalMargin);
                 Transform3DGroup transform = new Transform3DGroup();
                 transform.Children.Add(new TranslateTransform3D()
@@ -742,10 +746,34 @@ namespace towers_of_hanoi
             {
                 startingPoleX = 0;
             }
+
+            SolidColorBrush? discTop = (SolidColorBrush?)App.MainApp.TryFindResource("DiscTop");
+            SolidColorBrush? discBottom = (SolidColorBrush?)App.MainApp.TryFindResource("DiscBottom");
+
             for (int discNumber = 0; discNumber < discCount; discNumber++)
             {
                 float radius = discCount - discNumber + discHeight + 1;
-                ModelVisual3D disc = CreateDisc(radius, 2, 1, (int)(radius * 8), 8, 0.2f, colours[discNumber % colours.Length]);
+                System.Windows.Media.SolidColorBrush colour;
+                if (discTop == null || discBottom == null)
+                {
+                    // get the specified colour
+                    colour = (System.Windows.Media.SolidColorBrush)App.MainApp.FindResource("Disc" + discNumber);
+                }
+                else
+                {
+                    // calculate the colour
+                    System.Windows.Media.Color topColour = discTop.Color;
+                    System.Windows.Media.Color bottomColour = discBottom.Color;
+                    float progress = (float)discNumber / discCount;
+                    System.Windows.Media.Color blend = System.Windows.Media.Color.FromArgb(
+                        (byte)Lerp(bottomColour.A, topColour.A, progress),
+                        (byte)Lerp(bottomColour.R, topColour.R, progress),
+                        (byte)Lerp(bottomColour.G, topColour.G, progress),
+                        (byte)Lerp(bottomColour.B, topColour.B, progress)
+                        );
+                    colour = new SolidColorBrush(blend);
+                }
+                ModelVisual3D disc = CreateDisc(radius, 2, 1, (int)(radius * 8), 8, 0.2f, colour);
                 Transform3DGroup transform = new Transform3DGroup();
                 transform.Children.Add(new TranslateTransform3D()
                 {
@@ -765,6 +793,56 @@ namespace towers_of_hanoi
                     discHeight * discCount / 2, 
                     z
                     );
+            }
+        }
+
+        private int Lerp(int start, int end, float progress)
+        {
+            return (int)(start + (end - start) * progress);
+        }
+
+        public void Recolour()
+        {
+            SolidColorBrush? discTop = (SolidColorBrush?)App.MainApp.TryFindResource("DiscTop");
+            SolidColorBrush? discBottom = (SolidColorBrush?)App.MainApp.TryFindResource("DiscBottom");
+            for (int discIndex = 0; discIndex < discList.Count; discIndex++)
+            {
+                ModelVisual3D visual = discList[discIndex];
+                GeometryModel3D? geometry = visual.Content as GeometryModel3D;
+                if (geometry != null)
+                {
+                    System.Windows.Media.SolidColorBrush colour;
+                    if (discTop == null || discBottom == null)
+                    {
+                        // get the specified colour
+                        colour = (System.Windows.Media.SolidColorBrush)App.MainApp.FindResource("Disc" + discIndex);
+                    }
+                    else
+                    {
+                        // calculate the colour
+                        System.Windows.Media.Color topColour = discTop.Color;
+                        System.Windows.Media.Color bottomColour = discBottom.Color;
+                        float progress = (float)discIndex / discList.Count;
+                        System.Windows.Media.Color blend = System.Windows.Media.Color.FromArgb(
+                            (byte)Lerp(bottomColour.A, topColour.A, progress),
+                            (byte)Lerp(bottomColour.R, topColour.R, progress),
+                            (byte)Lerp(bottomColour.G, topColour.G, progress),
+                            (byte)Lerp(bottomColour.B, topColour.B, progress)
+                            );
+                        colour = new SolidColorBrush(blend);
+                    }
+                    geometry.Material = new DiffuseMaterial(colour);
+                }
+            }
+            SolidColorBrush poleColour = (SolidColorBrush)App.MainApp.FindResource("PoleColour");
+            for (int poleIndex = 0; poleIndex < poleList.Count; poleIndex++)
+            {
+                ModelVisual3D visual = poleList[poleIndex];
+                GeometryModel3D? geometry = visual.Content as GeometryModel3D;
+                if (geometry != null)
+                {
+                    geometry.Material = new DiffuseMaterial(poleColour);
+                }
             }
         }
     }

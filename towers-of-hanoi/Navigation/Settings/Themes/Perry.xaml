@@ -22,4 +22,27 @@
     <SolidColorBrush x:Key="FocusedAccentText" Color="#000000"/>
     <FontFamily x:Key="Font">Comic Sans MS</FontFamily>
 
+    <SolidColorBrush x:Key="Disc0" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc1" Color="#c00000"/>
+    <SolidColorBrush x:Key="Disc2" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc3" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc4" Color="#c00000"/>
+    <SolidColorBrush x:Key="Disc5" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc6" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc7" Color="#c00000"/>
+    <SolidColorBrush x:Key="Disc8" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc9" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc10" Color="#c00000"/>
+    <SolidColorBrush x:Key="Disc11" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc12" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc13" Color="#c00000"/>
+    <SolidColorBrush x:Key="Disc14" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc15" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc16" Color="#c00000"/>
+    <SolidColorBrush x:Key="Disc17" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc18" Color="#ffff99"/>
+    <SolidColorBrush x:Key="Disc19" Color="#c00000"/>
+
+    <SolidColorBrush x:Key="PoleColour" Color="#ffff99"/>
+
 </ResourceDictionary>

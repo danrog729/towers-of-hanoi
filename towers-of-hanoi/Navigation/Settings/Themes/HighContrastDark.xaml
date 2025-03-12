@@ -22,4 +22,27 @@
     <SolidColorBrush x:Key="FocusedAccentText" Color="#FFFFFF"/>
     <FontFamily x:Key="Font">Segoe UI</FontFamily>
 
+    <SolidColorBrush x:Key="Disc0" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc1" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc2" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc3" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc4" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc5" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc6" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc7" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc8" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc9" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc10" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc11" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc12" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc13" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc14" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc15" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc16" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc17" Color="#1174ff"/>
+    <SolidColorBrush x:Key="Disc18" Color="#ffff00"/>
+    <SolidColorBrush x:Key="Disc19" Color="#1174ff"/>
+
+    <SolidColorBrush x:Key="PoleColour" Color="#ffffff"/>
+
 </ResourceDictionary>

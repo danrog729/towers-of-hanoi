@@ -290,6 +290,11 @@ namespace towers_of_hanoi
         {
             delay = (int)(1000 - SpeedSlider.Value);
         }
+
+        public void Recolour()
+        {
+            scene.Recolour();
+        }
     }
 
     public struct AnimationData

@@ -44,4 +44,8 @@
     <SolidColorBrush x:Key="FocusedAccentText" Color="#1D1D1D"/>
     <FontFamily x:Key="Font">pack://application:,,,/Navigation/Settings/Themes/Fonts/#Titillium Web</FontFamily>
 
+    <SolidColorBrush x:Key="DiscTop" Color="#F1BE64"/>
+    <SolidColorBrush x:Key="DiscBottom" Color="#313031"/>
+    <SolidColorBrush x:Key="PoleColour" Color="#8e8e8e"/>
+
 </ResourceDictionary>

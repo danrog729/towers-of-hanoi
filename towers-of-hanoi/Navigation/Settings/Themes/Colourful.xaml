@@ -60,4 +60,27 @@
 
     <FontFamily x:Key="Font">Comic Sans MS</FontFamily>
 
+    <SolidColorBrush x:Key="Disc0" Color="Red"/>
+    <SolidColorBrush x:Key="Disc1" Color="Orange"/>
+    <SolidColorBrush x:Key="Disc2" Color="Yellow"/>
+    <SolidColorBrush x:Key="Disc3" Color="Green"/>
+    <SolidColorBrush x:Key="Disc4" Color="Blue"/>
+    <SolidColorBrush x:Key="Disc5" Color="Purple"/>
+    <SolidColorBrush x:Key="Disc6" Color="Red"/>
+    <SolidColorBrush x:Key="Disc7" Color="Orange"/>
+    <SolidColorBrush x:Key="Disc8" Color="Yellow"/>
+    <SolidColorBrush x:Key="Disc9" Color="Green"/>
+    <SolidColorBrush x:Key="Disc10" Color="Blue"/>
+    <SolidColorBrush x:Key="Disc11" Color="Purple"/>
+    <SolidColorBrush x:Key="Disc12" Color="Red"/>
+    <SolidColorBrush x:Key="Disc13" Color="Orange"/>
+    <SolidColorBrush x:Key="Disc14" Color="Yellow"/>
+    <SolidColorBrush x:Key="Disc15" Color="Green"/>
+    <SolidColorBrush x:Key="Disc16" Color="Blue"/>
+    <SolidColorBrush x:Key="Disc17" Color="Purple"/>
+    <SolidColorBrush x:Key="Disc18" Color="Red"/>
+    <SolidColorBrush x:Key="Disc19" Color="Orange"/>
+
+    <SolidColorBrush x:Key="PoleColour" Color="Blue"/>
+
 </ResourceDictionary>
