@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace towers_of_hanoi
 {
@@ -29,6 +31,10 @@ namespace towers_of_hanoi
         public int poleCount = 3;
         float discHeight = 2;
 
+        bool inGame;
+        DispatcherTimer timer;
+        Stopwatch stopwatch = new Stopwatch();
+
         public Singleplayer()
         {
             InitializeComponent();
@@ -37,6 +43,12 @@ namespace towers_of_hanoi
             scene.Reset(discCount, 3, 0, discHeight);
             lastMousePos = new Point(0, 0);
             rightMouseDownLast = false;
+
+            inGame = false;
+            timer = new DispatcherTimer();
+            stopwatch = new Stopwatch();
+            timer.Interval = TimeSpan.FromSeconds(0.001);
+            timer.Tick += UpdateTimerText;
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
@@ -93,6 +105,12 @@ namespace towers_of_hanoi
             {
                 scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
                 scene.DraggingLastOver = scene.DraggingFrom;
+                if (!inGame)
+                {
+                    inGame = true;
+                    stopwatch.Start();
+                    timer.Start();
+                }
             }
         }
 
@@ -120,6 +138,12 @@ namespace towers_of_hanoi
                         {
                             scene.SelectDirectMove(poleNumber);
                             scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
+                            if (!inGame)
+                            {
+                                inGame = true;
+                                stopwatch.Start();
+                                timer.Start();
+                            }
                         }
                     }
                     else
@@ -140,7 +164,12 @@ namespace towers_of_hanoi
                 scene.DropDisc(game.PeekPole(move.Item2), move.Item2, game.NumberOnPole(move.Item2) - 1);
                 if (game.GameWon)
                 {
-                    MessageBox.Show("You won in " + game.MovesTaken.ToString() + " moves!");
+                    inGame = false;
+                    stopwatch.Stop();
+                    timer.Stop();
+                    MessageBox.Show("You won in " + game.MovesTaken.ToString() + " moves in " +
+                        ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
+                    stopwatch.Reset();
                     game = new Game(poleCount, discCount, 0, poleCount - 1);
                     scene.Reset(discCount, poleCount, 0, discHeight);
                 }
@@ -164,6 +193,11 @@ namespace towers_of_hanoi
         public void Recolour()
         {
             scene.Recolour();
+        }
+
+        private void UpdateTimerText(object? sender, EventArgs e)
+        {
+            TimerOutput.Text = ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000");
         }
     }
 }
