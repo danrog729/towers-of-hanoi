@@ -1,5 +1,8 @@
-﻿using System.Configuration;
+﻿using System.ComponentModel;
+using System.Configuration;
 using System.Data;
+using System.IO;
+using System.Media;
 using System.Windows;
 
 namespace towers_of_hanoi
@@ -11,6 +14,9 @@ namespace towers_of_hanoi
     {
         public List<Theme> themes = new List<Theme>();
         private Theme _currentTheme;
+
+        public Sound clickSound;
+        public Sound dropSound;
 
         public Theme CurrentTheme
         {
@@ -50,6 +56,9 @@ namespace towers_of_hanoi
             themes.Add(new Theme("Programmer", "Navigation/Settings/Themes/Perry.xaml"));
             _currentTheme = themes[0];
             CurrentTheme = themes[0];
+
+            clickSound = new Sound("pack://application:,,,/Navigation/Settings/Themes/Sounds/click.wav");
+            dropSound = new Sound("pack://application:,,,/Navigation/Settings/Themes/Sounds/drop.wav");
         }
     }
 
@@ -67,5 +76,62 @@ namespace towers_of_hanoi
     public static class Preferences
     {
         public static float AnimationSpeed = 1.0f;
+        public static bool SoundsOn = false;
+    }
+
+    public class Sound
+    {
+        private string _path;
+        public string Path
+        {
+            get => _path;
+            set
+            {
+                _path = value;
+                Uri uri = new Uri(_path, UriKind.Absolute);
+                Stream resourceStream = Application.GetResourceStream(uri).Stream;
+                player = new SoundPlayer(resourceStream);
+            }
+        }
+        private SoundPlayer player;
+        private BackgroundWorker worker;
+
+        public Sound(string newPath)
+        {
+            _path = newPath;
+            Uri uri = new Uri(_path, UriKind.Absolute);
+            Stream resourceStream = Application.GetResourceStream(uri).Stream;
+            player = new SoundPlayer(resourceStream);
+            player.LoadAsync();
+            worker = new BackgroundWorker();
+            worker.DoWork += WaitThenPlay;
+        }
+
+        public void Play()
+        {
+            if (Preferences.SoundsOn)
+            {
+                player.Play();
+            }
+        }
+
+        private void WaitThenPlay(object? sender, DoWorkEventArgs e)
+        {
+            Thread.Sleep((int)(Scene3D.dropTime * 1000 / Preferences.AnimationSpeed));
+            player.Play();
+        }
+
+        public void PlayWait()
+        {
+            if (Preferences.SoundsOn && !worker.IsBusy)
+            {
+                worker.RunWorkerAsync();
+            }
+        }
+
+        public void Stop()
+        {
+            player.Stop();
+        }
     }
 }

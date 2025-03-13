@@ -262,6 +262,7 @@ namespace towers_of_hanoi
                     oldTransform.BeginAnimation(TranslateTransform3D.OffsetYProperty, yOffset);
                 }
             }
+            App.MainApp.dropSound.PlayWait();
         }
 
         private ModelVisual3D CreateDisc(float radius, float height, float innerRadius, int majorSegments, int minorSegments, float bevel, System.Windows.Media.SolidColorBrush colour)

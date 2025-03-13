@@ -11,10 +11,14 @@
 
   <ItemGroup>
     <None Remove="Navigation\Settings\Themes\Fonts\TitilliumWeb-Regular.ttf" />
+    <None Remove="Navigation\Settings\Themes\Sounds\click.wav" />
+    <None Remove="Navigation\Settings\Themes\Sounds\drop.wav" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Navigation\Settings\Themes\Fonts\TitilliumWeb-Regular.ttf" />
+    <Resource Include="Navigation\Settings\Themes\Sounds\click.wav" />
+    <Resource Include="Navigation\Settings\Themes\Sounds\drop.wav" />
   </ItemGroup>
 
 </Project>

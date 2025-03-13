@@ -24,6 +24,6 @@
 
     <SolidColorBrush x:Key="DiscTop" Color="#ffffff"/>
     <SolidColorBrush x:Key="DiscBottom" Color="#2222ff"/>
-    <SolidColorBrush x:Key="PoleColour" Color="#222222"/>
+    <SolidColorBrush x:Key="PoleColour" Color="#555555"/>
 
 </ResourceDictionary>

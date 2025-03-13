@@ -54,6 +54,7 @@ namespace towers_of_hanoi
             botThread.WorkerReportsProgress = true;
             botThread.ProgressChanged += UpdateViewport;
             botThread.RunWorkerCompleted += DisplayWin;
+            botThread.WorkerSupportsCancellation = true;
 
             animationThreads = new BackgroundWorker[discCount];
             for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
@@ -124,6 +125,8 @@ namespace towers_of_hanoi
 
         public void CancelBotPlay()
         {
+            // stop bot thread
+            botThread.CancelAsync();
             // stop all animation threads
             for (int threadIndex = 0; threadIndex < animationThreads.Length; threadIndex++)
             {
@@ -145,6 +148,11 @@ namespace towers_of_hanoi
                 pause.Reset();
                 botThread.ReportProgress(0, move);
                 pause.Wait();
+                if (botThread.CancellationPending)
+                {
+                    e.Cancel = true;
+                    return;
+                }
             }
         }
 
@@ -196,14 +204,16 @@ namespace towers_of_hanoi
                 {
                     worker.ReportProgress(0, index);
                     Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.AnimationSpeed));
-                    if (e.Cancel)
+                    if (worker.CancellationPending)
                     {
+                        e.Cancel = true;
                         return;
                     }
                     worker.ReportProgress(1, index);
                     Thread.Sleep((int)(Scene3D.hoverTime * 1000 / Preferences.AnimationSpeed));
-                    if (e.Cancel)
+                    if (worker.CancellationPending)
                     {
+                        e.Cancel = true;
                         return;
                     }
                     worker.ReportProgress(2, index);
@@ -231,11 +241,14 @@ namespace towers_of_hanoi
 
         private void DisplayWin(object? sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Bot won in " + game.MovesTaken.ToString() + " moves.");
-            game = new Game(poleCount, discCount, 0, poleCount - 1);
-            scene.Reset(discCount, poleCount, 0, discHeight);
-            paused = true;
-            readyToUnpause = true;
+            if (!e.Cancelled)
+            {
+                MessageBox.Show("Bot won in " + game.MovesTaken.ToString() + " moves.");
+                game = new Game(poleCount, discCount, 0, poleCount - 1);
+                scene.Reset(discCount, poleCount, 0, discHeight);
+                paused = true;
+                readyToUnpause = true;
+            }
         }
 
         private void NextClicked(object sender, RoutedEventArgs e)

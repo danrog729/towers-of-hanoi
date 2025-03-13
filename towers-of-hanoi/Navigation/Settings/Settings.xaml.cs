@@ -30,6 +30,7 @@ namespace towers_of_hanoi
 
         private void BackClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             // confirm exit if settings have been changed
             if (settingChanged)
             {
@@ -39,6 +40,7 @@ namespace towers_of_hanoi
                     // reset all of the settings
                     AnimationSpeedSlider.Value = Preferences.AnimationSpeed;
                     ThemeSelector.SelectedIndex = App.MainApp.themes.IndexOf(App.MainApp.CurrentTheme);
+                    SoundsCheckbox.IsChecked = Preferences.SoundsOn;
 
                     // return to main menu
                     settingChanged = false;
@@ -53,9 +55,14 @@ namespace towers_of_hanoi
 
         private void ConfirmClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             // set all of the settings
             Preferences.AnimationSpeed = (float)(AnimationSpeedSlider.Value);
             App.MainApp.CurrentTheme = App.MainApp.themes[ThemeSelector.SelectedIndex];
+            if (SoundsCheckbox.IsChecked != null)
+            {
+                Preferences.SoundsOn = SoundsCheckbox.IsChecked.Value;
+            }
             settingChanged = false;
 
             // return to main menu

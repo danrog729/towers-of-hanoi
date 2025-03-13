@@ -30,26 +30,31 @@ namespace towers_of_hanoi
 
         private void ResumeClicked(object sender, EventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
         }
 
         private void SingleplayerClicked(object sender, EventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToSingleplayerSetup();
         }
 
         private void AutomaticClicked(object sender, EventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToAutomaticSetup();
         }
 
         private void SettingsClicked(object sender, EventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToSettings();
         }
 
         private void QuitClicked(object sender, EventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToQuitConfirmation();
         }
     }

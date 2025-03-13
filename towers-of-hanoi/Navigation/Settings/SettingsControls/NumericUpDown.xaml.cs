@@ -114,6 +114,7 @@ namespace towers_of_hanoi
 
         public void UpClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             if (Value + 1 <= MaxValue)
             {
                 Value += 1;
@@ -122,6 +123,7 @@ namespace towers_of_hanoi
 
         public void DownClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             if (Value - 1 >= MinValue)
             {
                 Value -= 1;

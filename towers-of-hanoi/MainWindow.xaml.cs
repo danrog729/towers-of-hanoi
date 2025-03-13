@@ -50,6 +50,7 @@ namespace towers_of_hanoi
                     {
                         navigationWindow.Owner = this;
                     }
+                    App.MainApp.clickSound.Play();
                     navigationWindow.ShowDialog();
                 }
                 else
@@ -80,6 +81,7 @@ namespace towers_of_hanoi
                 {
                     navigationWindow.Owner = this;
                 }
+                App.MainApp.clickSound.Play();
                 navigationWindow.ShowDialog();
             }
             else

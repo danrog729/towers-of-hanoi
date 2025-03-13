@@ -27,6 +27,15 @@
                 <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10">Theme</TextBlock>
                 <ComboBox Name="ThemeSelector" Grid.Column="1" Margin="10" SelectionChanged="SettingChanged"/>
             </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10">Sounds</TextBlock>
+                <CheckBox Name="SoundsCheckbox" Grid.Column="1" Margin="10" Checked="SettingChanged" Unchecked="SettingChanged"/>
+            </Grid>
         </StackPanel>
 
         <TextBlock Grid.Row="0">Settings</TextBlock>

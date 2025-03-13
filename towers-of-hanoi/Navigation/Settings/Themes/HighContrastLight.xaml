@@ -23,26 +23,26 @@
     <FontFamily x:Key="Font">Segoe UI</FontFamily>
 
     <SolidColorBrush x:Key="Disc0" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc1" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc1" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc2" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc3" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc3" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc4" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc5" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc5" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc6" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc7" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc7" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc8" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc9" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc9" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc10" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc11" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc11" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc12" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc13" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc13" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc14" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc15" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc15" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc16" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc17" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc17" Color="#dddddd"/>
     <SolidColorBrush x:Key="Disc18" Color="#0000AA"/>
-    <SolidColorBrush x:Key="Disc19" Color="#222222"/>
+    <SolidColorBrush x:Key="Disc19" Color="#dddddd"/>
 
-    <SolidColorBrush x:Key="PoleColour" Color="#000000"/>
+    <SolidColorBrush x:Key="PoleColour" Color="#222222"/>
 
 </ResourceDictionary>

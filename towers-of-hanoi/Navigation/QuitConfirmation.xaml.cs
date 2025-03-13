@@ -30,11 +30,13 @@ namespace towers_of_hanoi
 
         private void BackClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
         }
 
         private void QuitClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             App.MainApp.Shutdown();
         }
     }
