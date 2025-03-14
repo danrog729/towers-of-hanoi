@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <Button Grid.Row="0" Click="ResumeClicked">Resume</Button>
         <Button Grid.Row="1" Click="SingleplayerClicked">Singleplayer</Button>
-        <Button Grid.Row="2">Multiplayer</Button>
+        <Button Grid.Row="2" Click="MultiplayerClicked">Multiplayer</Button>
         <Button Grid.Row="3" Click="AutomaticClicked">Automatic</Button>
         <Button Grid.Row="4" Click="SettingsClicked">Settings</Button>
         <Button Grid.Row="5" Click="QuitClicked">Quit</Button>

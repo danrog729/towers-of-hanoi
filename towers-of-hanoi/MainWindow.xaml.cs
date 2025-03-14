@@ -19,6 +19,7 @@ namespace towers_of_hanoi
     public partial class MainWindow : Window
     {
         public Singleplayer singleplayer;
+        public Multiplayer multiplayer;
         public Automatic automatic;
         public NavigationWindow navigationWindow;
         bool mainMenuOpened;
@@ -28,6 +29,7 @@ namespace towers_of_hanoi
             InitializeComponent();
 
             singleplayer = new Singleplayer();
+            multiplayer = new Multiplayer();
             automatic = new Automatic();
             ContentFrame.Content = singleplayer;
             navigationWindow = new NavigationWindow();
@@ -65,6 +67,13 @@ namespace towers_of_hanoi
             automatic.CancelBotPlay();
             singleplayer.NewSingleplayer(DiscCount, PoleCount);
             ContentFrame.Content = singleplayer;
+        }
+
+        public void SwitchToMultiplayer(int DiscCount, int PoleCount)
+        {
+            automatic.CancelBotPlay();
+            multiplayer.NewMultiplayer(DiscCount, PoleCount);
+            ContentFrame.Content = multiplayer;
         }
 
         public void SwitchToAutomatic(int DiscCount, int PoleCount)

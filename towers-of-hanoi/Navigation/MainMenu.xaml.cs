@@ -40,6 +40,12 @@ namespace towers_of_hanoi
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToSingleplayerSetup();
         }
 
+        private void MultiplayerClicked(object sender, EventArgs e)
+        {
+            App.MainApp.clickSound.Play();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerMenu();
+        }
+
         private void AutomaticClicked(object sender, EventArgs e)
         {
             App.MainApp.clickSound.Play();
