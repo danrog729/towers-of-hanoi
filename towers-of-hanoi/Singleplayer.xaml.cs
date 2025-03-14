@@ -185,6 +185,12 @@ namespace towers_of_hanoi
         {
             discCount = DiscCount;
             poleCount = PoleCount;
+
+            timer.Stop();
+            stopwatch.Reset();
+            TimerOutput.Text = "00:00.000";
+            inGame = false;
+
             scene.Reset(discCount, poleCount, 0, discHeight);
             game = new Game(poleCount, discCount, 0, poleCount - 1);
             Viewport.Focus();
