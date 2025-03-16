@@ -63,6 +63,14 @@ namespace towers_of_hanoi
                 {
                     Hide();
                 }
+                else if (NavigationFrame.Content == multiplayerSetup)
+                {
+                    SwitchToMultiplayerMenu();
+                }
+                else if (NavigationFrame.Content == multiplayerServer)
+                {
+                    SwitchToMultiplayerSetup();
+                }
                 else
                 {
                     SwitchToMainMenu();
@@ -101,6 +109,8 @@ namespace towers_of_hanoi
             multiplayerSetup.Height = MultiplayerMenu.DesiredHeight;
 
             NavigationFrame.Content = multiplayerMenu;
+
+            multiplayerMenu.Initialise();
         }
 
         public void SwitchToMultiplayerSetup()

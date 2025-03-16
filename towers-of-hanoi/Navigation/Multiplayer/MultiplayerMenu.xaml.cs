@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,9 +30,16 @@ namespace towers_of_hanoi.Navigation
             InitializeComponent();
         }
 
+        public void Initialise()
+        {
+            Multiplayer.MultiCast.Connect();
+            Multiplayer.MultiCast.SendServerRequest();
+        }
+
         private void BackClicked(object sender, RoutedEventArgs e)
         {
             App.MainApp.clickSound.Play();
+            Multiplayer.MultiCast.Disconnect();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
         }
 
@@ -38,11 +47,6 @@ namespace towers_of_hanoi.Navigation
         {
             App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerSetup();
-        }
-
-        private void RefreshServerList()
-        {
-            // do a multicast across the network and add players to the server list when a response is received
         }
     }
 }
