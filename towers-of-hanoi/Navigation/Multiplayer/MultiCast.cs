@@ -30,15 +30,17 @@ namespace towers_of_hanoi.Navigation.Multiplayer
 
         static MultiCast()
         {
-            multiCastIP = IPAddress.Parse("239.1.1.1");
+            multiCastIP = IPAddress.Parse("224.0.2.0");
 
             sendingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             sendingSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(multiCastIP));
             sendingSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 2);
+            sendingSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             sendingEndpoint = new IPEndPoint(multiCastIP, 12345);
 
             receivingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             receivingSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(multiCastIP));
+            receivingSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             receivingEndpoint = (EndPoint)new IPEndPoint(IPAddress.Any, 12345);
             receivingSocket.Bind(receivingEndpoint);
 
@@ -49,12 +51,18 @@ namespace towers_of_hanoi.Navigation.Multiplayer
 
         public static void Connect()
         {
-            multiCastListener.RunWorkerAsync();
+            if (!multiCastListener.IsBusy)
+            {
+                multiCastListener.RunWorkerAsync();
+            }
         }
 
         public static void Disconnect()
         {
-            multiCastListener.CancelAsync();
+            if (multiCastListener.IsBusy)
+            {
+                multiCastListener.CancelAsync();
+            }
         }
 
         private static void StartListening(object? sender, DoWorkEventArgs e)
@@ -76,8 +84,20 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                     }
                     else if (message.Contains(responseMessage) && ServerResponseMessageReceived != null)
                     {
-                        string ip = message.Remove(0, responseMessage.Length);
-                        ServerResponseMessageReceived(ip, new EventArgs());
+                        string payload = message.Remove(0, responseMessage.Length);
+                        string[] split = payload.Split("_");
+                        string ip = split[0];
+                        int discs = 0;
+                        int poles = 0;
+                        if (!Int32.TryParse(split[1], out discs))
+                        {
+                            return;
+                        }
+                        if (!Int32.TryParse(split[2], out poles))
+                        {
+                            return;
+                        }
+                        ServerResponseMessageReceived((ip,discs,poles), new EventArgs());
                     }
                     else if (message.Contains(resignmentMessage) && ServerResignmentMessageReceived != null)
                     {
@@ -101,10 +121,10 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             Debug.WriteLine("Sent message: " + requestMessage);
         }
 
-        public static void SendServerResponse()
+        public static void SendServerResponse(int discs, int poles)
         {
             // send message
-            string message = responseMessage + "[PUT_TCP_ENDPOINT_HERE]";
+            string message = responseMessage + "[PUT_TCP_ENDPOINT_HERE]" + "_" + discs.ToString() + "_" + poles.ToString();
             byte[] messageArray = Encoding.ASCII.GetBytes(message);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
             Debug.WriteLine("Sent message: " + message);

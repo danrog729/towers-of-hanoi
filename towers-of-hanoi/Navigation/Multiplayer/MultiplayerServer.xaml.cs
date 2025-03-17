@@ -31,15 +31,17 @@ namespace towers_of_hanoi.Navigation
         public void OpenServer()
         {
             // send multicast signal announcing presence
-
             // start listening for multicast connections and respond if receives one
+            Multiplayer.MultiCast.Connect();
+            Multiplayer.MultiCast.SendServerResponse(6,3);
         }
 
         public void CloseServer()
         {
             // send multicast signal announcing leaving
-
             // stop listening for multicast connections
+            Multiplayer.MultiCast.SendServerResignment();
+            Multiplayer.MultiCast.Disconnect();
         }
     }
 }
