@@ -46,6 +46,7 @@ namespace towers_of_hanoi.Navigation
         private void SwitchToGameCreation(object sender, RoutedEventArgs e)
         {
             App.MainApp.clickSound.Play();
+            Multiplayer.MultiCast.Disconnect();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerSetup();
         }
     }
