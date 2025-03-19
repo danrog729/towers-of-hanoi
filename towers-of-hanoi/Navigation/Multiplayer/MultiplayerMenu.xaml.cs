@@ -40,22 +40,25 @@ namespace towers_of_hanoi.Navigation
             Multiplayer.MultiCast.ServerResignmentMessageReceived += RemoveServerListing;
         }
 
+        public void Deinitialise()
+        {
+            Multiplayer.MultiCast.Disconnect();
+            Multiplayer.MultiCast.ServerResponseMessageReceived -= AddServerListing;
+            Multiplayer.MultiCast.ServerResignmentMessageReceived -= RemoveServerListing;
+        }
+
         private void BackClicked(object sender, RoutedEventArgs e)
         {
             App.MainApp.clickSound.Play();
-            Multiplayer.MultiCast.Disconnect();
+            Deinitialise();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
-            Multiplayer.MultiCast.ServerResponseMessageReceived -= AddServerListing;
-            Multiplayer.MultiCast.ServerResignmentMessageReceived -= RemoveServerListing;
         }
 
         private void SwitchToGameCreation(object sender, RoutedEventArgs e)
         {
             App.MainApp.clickSound.Play();
-            Multiplayer.MultiCast.Disconnect();
+            Deinitialise();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerSetup();
-            Multiplayer.MultiCast.ServerResponseMessageReceived -= AddServerListing;
-            Multiplayer.MultiCast.ServerResignmentMessageReceived -= RemoveServerListing;
         }
 
         private void AddServerListing(object? sender, EventArgs e)

@@ -20,22 +20,24 @@ namespace towers_of_hanoi.Navigation.Multiplayer
     /// </summary>
     public partial class ServerEntry : UserControl
     {
-        private string _serverName;
+        private string _serverName = "server name";
         public string ServerName
         {
             get => _serverName;
             set
             {
+                _serverName = value;
                 ServerNameBox.Text = value;
             }
         }
 
-        private string _ipAddress;
+        private string _ipAddress = "[PUT TCP ENDPOINT HERE]";
         public string IPAddress
         {
             get => _ipAddress;
             set
             {
+                _ipAddress = value;
                 IPAddressBox.Text = value;
             }
         }
@@ -43,8 +45,6 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         public ServerEntry()
         {
             InitializeComponent();
-            _serverName = "server name";
-            _ipAddress = "0.0.0.0:0";
         }
     }
 }

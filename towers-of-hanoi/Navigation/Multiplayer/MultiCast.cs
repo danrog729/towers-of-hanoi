@@ -133,7 +133,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         public static void SendServerResponse(int discs, int poles)
         {
             // send message
-            string message = responseMessage + "[PUT_TCP_ENDPOINT_HERE]" + "_" + discs.ToString() + "_" + poles.ToString();
+            string message = responseMessage + "[PUT TCP ENDPOINT HERE]" + "_" + discs.ToString() + "_" + poles.ToString();
             byte[] messageArray = Encoding.ASCII.GetBytes(message);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
             Debug.WriteLine("Sent message: " + message);
@@ -142,7 +142,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         public static void SendServerResignment()
         {
             // send message
-            string message = resignmentMessage + "[PUT_TCP_ENDPOINT_HERE]";
+            string message = resignmentMessage + "[PUT TCP ENDPOINT HERE]";
             byte[] messageArray = Encoding.ASCII.GetBytes(message);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
             Debug.WriteLine("Sent message: " + message);
