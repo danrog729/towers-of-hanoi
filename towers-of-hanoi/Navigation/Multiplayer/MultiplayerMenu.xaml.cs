@@ -34,6 +34,7 @@ namespace towers_of_hanoi.Navigation
 
         public void Initialise()
         {
+            ServerList.Children.Clear();
             Multiplayer.MultiCast.Connect();
             Multiplayer.MultiCast.SendServerRequest();
             Multiplayer.MultiCast.ServerResponseMessageReceived += AddServerListing;
@@ -63,10 +64,10 @@ namespace towers_of_hanoi.Navigation
 
         private void AddServerListing(object? sender, EventArgs e)
         {
-            (string, int, int)? details = sender as (string, int, int)?;
+            (string, string, int, int, int)? details = sender as (string, string, int, int, int)?;
             if (details != null)
             {
-                ServerList.Children.Add(new Multiplayer.ServerEntry() { ServerName = details.Value.Item1, IPAddress = details.Value.Item1 });
+                ServerList.Children.Add(new Multiplayer.ServerEntry() { ServerName = details.Value.Item2, IPAddress = details.Value.Item1 });
             }
         }
 

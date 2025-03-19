@@ -40,8 +40,13 @@ namespace towers_of_hanoi
         {
             App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerServer();
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SetServerSettings(DiscCount.Value, PoleCount.Value, BestOf.Value);
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SetServerSettings(ServerNameBox.Text, DiscCount.Value, PoleCount.Value, BestOf.Value);
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.OpenMultiplayerServer();
+        }
+
+        private void ServerNameChanged(object sender, TextChangedEventArgs e)
+        {
+            CreateButton.IsEnabled = ServerNameBox.Text.Trim().Length > 0;
         }
 
         public void Recolour()

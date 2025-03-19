@@ -10,19 +10,14 @@
 
     <Grid Height="450" Width="800">
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0">Available players:</TextBlock>
-            <StackPanel Name="ServerList"/>
-        </Grid>
-        <Button Grid.Row="1" Click="BackClicked" Width="100" HorizontalAlignment="Left">Back</Button>
-        <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal">
+        <TextBlock Grid.Row="0">Available players:</TextBlock>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="ServerList"/>
+        <Button Grid.Row="2" Click="BackClicked" Width="100" HorizontalAlignment="Left">Back</Button>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
             <Button Width="100" Click="SwitchToGameCreation">Create Game</Button>
             <Button Width="100">Join Game</Button>
         </StackPanel>

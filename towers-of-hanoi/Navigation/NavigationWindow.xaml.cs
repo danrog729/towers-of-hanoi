@@ -203,8 +203,9 @@ namespace towers_of_hanoi
             multiplayerServer.CloseServer();
         }
 
-        public void SetServerSettings(int discs, int poles, int bestOf)
+        public void SetServerSettings(string name, int discs, int poles, int bestOf)
         {
+            multiplayerServer.serverName = name;
             multiplayerServer.discs = discs;
             multiplayerServer.poles = poles;
             multiplayerServer.bestOf = bestOf;

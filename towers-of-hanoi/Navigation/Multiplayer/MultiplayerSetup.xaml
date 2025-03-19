@@ -39,7 +39,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="5">Server Name:</TextBlock>
             <Border Grid.Column="1" BorderBrush="{DynamicResource BorderColour}" BorderThickness="{DynamicResource BorderThickness}">
-                <TextBox VerticalAlignment="Center" Width="200"></TextBox>
+                <TextBox VerticalAlignment="Center" Width="200" TextChanged="ServerNameChanged" Name="ServerNameBox"></TextBox>
             </Border>
         </Grid>
 
@@ -49,6 +49,6 @@
                      Value="1" MinValue="1" MaxValue="10"/>
 
         <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" Click="BackClicked">Back</Button>
-        <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Click="CreateClicked">Create</Button>
+        <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Name="CreateButton" Click="CreateClicked" IsEnabled="False">Create</Button>
     </Grid>
 </Page>
