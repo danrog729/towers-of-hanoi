@@ -210,5 +210,10 @@ namespace towers_of_hanoi
             multiplayerServer.poles = poles;
             multiplayerServer.bestOf = bestOf;
         }
+
+        public void SetSelectedServerEntry(ServerEntry entry)
+        {
+            multiplayerMenu.SetSelectedEntry(entry);
+        }
     }
 }

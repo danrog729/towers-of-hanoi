@@ -45,7 +45,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{DynamicResource BorderThickness}">
-                        <ContentPresenter Name="content" Content="{TemplateBinding Content}" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ContentPresenter Name="content" Content="{TemplateBinding Content}" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

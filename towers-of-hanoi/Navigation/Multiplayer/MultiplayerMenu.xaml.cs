@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using towers_of_hanoi.Navigation.Multiplayer;
 
 namespace towers_of_hanoi.Navigation
 {
@@ -27,9 +29,14 @@ namespace towers_of_hanoi.Navigation
         public static int DesiredWidth = 800;
         public static int DesiredHeight = 450;
 
+        private bool isServerSelected;
+        private int serverSelected;
+
         public MultiplayerMenu()
         {
             InitializeComponent();
+            isServerSelected = false;
+            serverSelected = 0;
         }
 
         public void Initialise()
@@ -62,12 +69,56 @@ namespace towers_of_hanoi.Navigation
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerSetup();
         }
 
+        private void LoseFocusFromEntry(object sender, EventArgs e)
+        {
+            foreach (UIElement element in ServerList.Children)
+            {
+                ServerEntry? entry = element as ServerEntry;
+                if (entry != null)
+                {
+                    entry.EntryUnclicked();
+                }
+            }
+            isServerSelected = false;
+            JoinButton.IsEnabled = false;
+        }
+
+        public void SetSelectedEntry(ServerEntry entry)
+        {
+            isServerSelected = true;
+            JoinButton.IsEnabled = true;
+            serverSelected = ServerList.Children.IndexOf(entry);
+            for (int index = 0; index < ServerList.Children.Count; index++)
+            {
+                if (index != serverSelected)
+                {
+                    ServerEntry? serverEntry = ServerList.Children[index] as ServerEntry;
+                    if (serverEntry != null)
+                    {
+                        serverEntry.EntryUnclicked();
+                    }
+                }
+            }
+        }
+
+        private void JoinGame(object sender, RoutedEventArgs e)
+        {
+            // establish a tcp connection, which should tell the server to announcing leaving to the multicast
+            // start playing the game
+        }
+
         private void AddServerListing(object? sender, EventArgs e)
         {
             (string, string, int, int, int)? details = sender as (string, string, int, int, int)?;
             if (details != null)
             {
-                ServerList.Children.Add(new Multiplayer.ServerEntry() { ServerName = details.Value.Item2, IPAddress = details.Value.Item1 });
+                ServerList.Children.Add(new Multiplayer.ServerEntry() { 
+                    ServerName = details.Value.Item2, 
+                    IPAddress = details.Value.Item1,
+                    Discs = details.Value.Item3,
+                    Poles = details.Value.Item4,
+                    BestOf = details.Value.Item5
+                });
             }
         }
 
@@ -84,8 +135,12 @@ namespace towers_of_hanoi.Navigation
                     {
                         if (entry.IPAddress == ip)
                         {
+                            if (serverSelected == ServerList.Children.IndexOf(entry))
+                            {
+                                isServerSelected = false;
+                                JoinButton.IsEnabled = false;
+                            }
                             ServerList.Children.Remove(entry);
-                            return;
                         }
                     }
                 }

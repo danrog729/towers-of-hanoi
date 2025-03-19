@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:towers_of_hanoi.Navigation"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="MultiplayerMenu">
+      Title="MultiplayerMenu" MouseLeftButtonDown="LoseFocusFromEntry">
 
     <Grid Height="450" Width="800">
         <Grid.RowDefinitions>
@@ -19,7 +19,7 @@
         <Button Grid.Row="2" Click="BackClicked" Width="100" HorizontalAlignment="Left">Back</Button>
         <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
             <Button Width="100" Click="SwitchToGameCreation">Create Game</Button>
-            <Button Width="100">Join Game</Button>
+            <Button Width="100" Click="JoinGame" Name="JoinButton" IsEnabled="False">Join Game</Button>
         </StackPanel>
     </Grid>
 </Page>

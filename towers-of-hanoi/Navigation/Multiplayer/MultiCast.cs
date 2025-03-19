@@ -46,6 +46,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             receivingSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             receivingEndpoint = (EndPoint)new IPEndPoint(localIP, 12345);
             receivingSocket.Bind(receivingEndpoint);
+            receivingSocket.ReceiveBufferSize = 0;
 
             multiCastListener = new BackgroundWorker();
             multiCastListener.DoWork += StartListening;
@@ -94,6 +95,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         private static void StartListening(object? sender, DoWorkEventArgs e)
         {
             bool shouldFinish = false;
+            receivingSocket.ReceiveBufferSize = 8192;
             while (!shouldFinish)
             {
 
@@ -148,6 +150,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                     shouldFinish = true;
                 }
             }
+            receivingSocket.ReceiveBufferSize = 0;
         }
 
         public static void SendServerRequest()
