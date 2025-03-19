@@ -23,6 +23,10 @@ namespace towers_of_hanoi.Navigation
         public static int DesiredWidth = 800;
         public static int DesiredHeight = 450;
 
+        public int discs;
+        public int poles;
+        public int bestOf;
+
         public MultiplayerServer()
         {
             InitializeComponent();
@@ -33,7 +37,8 @@ namespace towers_of_hanoi.Navigation
             // send multicast signal announcing presence
             // start listening for multicast connections and respond if receives one
             Multiplayer.MultiCast.Connect();
-            Multiplayer.MultiCast.SendServerResponse(6,3);
+            Multiplayer.MultiCast.SendServerResponse(discs,poles);
+            Multiplayer.MultiCast.ServerRequestMessageReceived += SendResponseMessage;
         }
 
         public void CloseServer()
@@ -42,6 +47,22 @@ namespace towers_of_hanoi.Navigation
             // stop listening for multicast connections
             Multiplayer.MultiCast.SendServerResignment();
             Multiplayer.MultiCast.Disconnect();
+            Multiplayer.MultiCast.ServerRequestMessageReceived -= SendResponseMessage;
+        }
+
+        private void QuitClicked(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToServerQuitConfirmation();
+        }
+
+        private void StartClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SendResponseMessage(object? sender, EventArgs e)
+        {
+            Multiplayer.MultiCast.SendServerResponse(discs, poles);
         }
     }
 }

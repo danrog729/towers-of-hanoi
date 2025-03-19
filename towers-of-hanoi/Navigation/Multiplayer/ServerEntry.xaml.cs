@@ -20,9 +20,31 @@ namespace towers_of_hanoi.Navigation.Multiplayer
     /// </summary>
     public partial class ServerEntry : UserControl
     {
+        private string _serverName;
+        public string ServerName
+        {
+            get => _serverName;
+            set
+            {
+                ServerNameBox.Text = value;
+            }
+        }
+
+        private string _ipAddress;
+        public string IPAddress
+        {
+            get => _ipAddress;
+            set
+            {
+                IPAddressBox.Text = value;
+            }
+        }
+
         public ServerEntry()
         {
             InitializeComponent();
+            _serverName = "server name";
+            _ipAddress = "0.0.0.0:0";
         }
     }
 }

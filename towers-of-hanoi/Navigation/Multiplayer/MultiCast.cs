@@ -80,7 +80,10 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                     
                     if (message == requestMessage && ServerRequestMessageReceived != null)
                     {
-                        ServerRequestMessageReceived(null, new EventArgs());
+                        App.MainApp.Dispatcher.Invoke(() =>
+                        {
+                            ServerRequestMessageReceived.Invoke(null, new EventArgs());
+                        });
                     }
                     else if (message.Contains(responseMessage) && ServerResponseMessageReceived != null)
                     {
@@ -97,12 +100,18 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                         {
                             return;
                         }
-                        ServerResponseMessageReceived((ip,discs,poles), new EventArgs());
+                        App.MainApp.Dispatcher.Invoke(() =>
+                        {
+                            ServerResponseMessageReceived.Invoke((ip, discs, poles), new EventArgs());
+                        });
                     }
                     else if (message.Contains(resignmentMessage) && ServerResignmentMessageReceived != null)
                     {
                         string ip = message.Remove(0, resignmentMessage.Length);
-                        ServerResignmentMessageReceived(null, new EventArgs());
+                        App.MainApp.Dispatcher.Invoke(() =>
+                        {
+                            ServerResignmentMessageReceived.Invoke(ip, new EventArgs());
+                        });
                     }
                 }
 

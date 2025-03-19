@@ -40,6 +40,8 @@ namespace towers_of_hanoi
         {
             App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerServer();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.OpenMultiplayerServer();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SetServerSettings(DiscCount.Value, PoleCount.Value, BestOf.Value);
         }
 
         public void Recolour()
