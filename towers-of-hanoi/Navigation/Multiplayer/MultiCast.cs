@@ -35,7 +35,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             IPAddress localIP = GetLocalIPAddress();
 
             sendingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            sendingSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(multiCastIP));
+            sendingSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(multiCastIP, localIP));
             sendingSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastInterface, localIP.GetAddressBytes());
             sendingSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 2);
             sendingSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -164,7 +164,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         public static void SendServerResponse(string name, int discs, int poles, int bestOf)
         {
             // send message
-            string message = responseMessage + "[PUT TCP ENDPOINT HERE]" + "_" + name + "_" + discs.ToString() + "_" + poles.ToString() + "_" + bestOf.ToString();
+            string message = responseMessage + TCP.GetIP() + "_" + name + "_" + discs.ToString() + "_" + poles.ToString() + "_" + bestOf.ToString();
             byte[] messageArray = Encoding.ASCII.GetBytes(message);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
             Debug.WriteLine("Sent message: " + message);
@@ -173,7 +173,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         public static void SendServerResignment()
         {
             // send message
-            string message = resignmentMessage + "[PUT TCP ENDPOINT HERE]";
+            string message = resignmentMessage + TCP.GetIP();
             byte[] messageArray = Encoding.ASCII.GetBytes(message);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
             Debug.WriteLine("Sent message: " + message);

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using towers_of_hanoi.Navigation.Multiplayer;
 
 namespace towers_of_hanoi.Navigation
 {
@@ -41,6 +42,7 @@ namespace towers_of_hanoi.Navigation
             Multiplayer.MultiCast.Connect();
             Multiplayer.MultiCast.SendServerResponse(serverName,discs,poles,bestOf);
             Multiplayer.MultiCast.ServerRequestMessageReceived += SendResponseMessage;
+            TCP.StartServer();
         }
 
         public void CloseServer()

@@ -104,6 +104,7 @@ namespace towers_of_hanoi.Navigation
         private void JoinGame(object sender, RoutedEventArgs e)
         {
             // establish a tcp connection, which should tell the server to announcing leaving to the multicast
+            TCP.Connect(((ServerEntry)ServerList.Children[serverSelected]).IPAddress);
             // start playing the game
         }
 
