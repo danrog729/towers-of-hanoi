@@ -191,6 +191,7 @@ namespace towers_of_hanoi
             singleplayerSetup.Recolour();
             multiplayerSetup.Recolour();
             automaticSetup.Recolour();
+            multiplayerServer.Recolour();
         }
 
         public void OpenMultiplayerServer()
@@ -205,10 +206,7 @@ namespace towers_of_hanoi
 
         public void SetServerSettings(string name, int discs, int poles, int bestOf)
         {
-            multiplayerServer.serverName = name;
-            multiplayerServer.discs = discs;
-            multiplayerServer.poles = poles;
-            multiplayerServer.bestOf = bestOf;
+            multiplayerServer.UpdateDetails(name, discs, poles, bestOf);
         }
 
         public void SetSelectedServerEntry(ServerEntry entry)

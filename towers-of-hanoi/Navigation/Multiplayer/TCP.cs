@@ -30,6 +30,10 @@ namespace towers_of_hanoi.Navigation.Multiplayer
 
         private static BackgroundWorker? worker;
 
+        private static string greetingMessage = "TOH:ESTABLISH_CONNECTION";
+
+        public static event EventHandler GreetingReceived = delegate { };
+
         static TCP()
         {
             IPAddress? localIP = GetLocalIPAddress();
@@ -94,19 +98,28 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                 return;
             }
             receivingSocket.Listen(100);
-            using (Socket clientSocket = receivingSocket.Accept())
+            while (!worker.CancellationPending)
             {
-                while (!worker.CancellationPending)
+                if (receivingSocket.Poll(100000, SelectMode.SelectRead))
                 {
-                    if (clientSocket.Available > 0)
+                    using (Socket clientSocket = receivingSocket.Accept())
                     {
-                        byte[] buffer = new byte[clientSocket.ReceiveBufferSize];
-                        int bytesReceived = clientSocket.Receive(buffer);
-                        string message = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
-                        Debug.WriteLine("Received message: " + message);
-                    }
+                        if (clientSocket.Available > 0 && clientSocket.RemoteEndPoint != null)
+                        {
+                            byte[] buffer = new byte[clientSocket.ReceiveBufferSize];
+                            int bytesReceived = clientSocket.Receive(buffer);
+                            string message = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
+                            Debug.WriteLine("TCP: Received message: " + message);
 
-                    Thread.Sleep(10); // Prevent CPU overuse
+                            if (message == greetingMessage && GreetingReceived != null)
+                            {
+                                App.MainApp.Dispatcher.Invoke(() =>
+                                {
+                                    GreetingReceived.Invoke(clientSocket.RemoteEndPoint.ToString(), new EventArgs());
+                                });
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -121,7 +134,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
 
         public static void CloseServer()
         {
-            if (CanConnect && worker != null)
+            if (worker != null)
             {
                 worker.CancelAsync();
             }
@@ -146,9 +159,8 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         {
             if (CanConnect && sendingSocket != null && remoteEndPoint != null)
             {
-                string message = "Hello";
-                sendingSocket.Send(Encoding.ASCII.GetBytes(message));
-                Debug.WriteLine("Sent message: " + message);
+                sendingSocket.Send(Encoding.ASCII.GetBytes(greetingMessage));
+                Debug.WriteLine("TCP: Sent message: " + greetingMessage);
             }
         }
     }

@@ -29,13 +29,11 @@ namespace towers_of_hanoi.Navigation
         public static int DesiredWidth = 800;
         public static int DesiredHeight = 450;
 
-        private bool isServerSelected;
         private int serverSelected;
 
         public MultiplayerMenu()
         {
             InitializeComponent();
-            isServerSelected = false;
             serverSelected = 0;
         }
 
@@ -79,13 +77,11 @@ namespace towers_of_hanoi.Navigation
                     entry.EntryUnclicked();
                 }
             }
-            isServerSelected = false;
             JoinButton.IsEnabled = false;
         }
 
         public void SetSelectedEntry(ServerEntry entry)
         {
-            isServerSelected = true;
             JoinButton.IsEnabled = true;
             serverSelected = ServerList.Children.IndexOf(entry);
             for (int index = 0; index < ServerList.Children.Count; index++)
@@ -138,7 +134,6 @@ namespace towers_of_hanoi.Navigation
                         {
                             if (serverSelected == ServerList.Children.IndexOf(entry))
                             {
-                                isServerSelected = false;
                                 JoinButton.IsEnabled = false;
                             }
                             ServerList.Children.Remove(entry);

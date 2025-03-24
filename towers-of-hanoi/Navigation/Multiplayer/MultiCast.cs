@@ -86,10 +86,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
 
         public static void Disconnect()
         {
-            if (multiCastListener.IsBusy)
-            {
-                multiCastListener.CancelAsync();
-            }
+            multiCastListener.CancelAsync();
         }
 
         private static void StartListening(object? sender, DoWorkEventArgs e)
@@ -98,13 +95,12 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             receivingSocket.ReceiveBufferSize = 8192;
             while (!shouldFinish)
             {
-
                 byte[] buffer = new byte[receivingSocket.ReceiveBufferSize];
                 if (receivingSocket.Available != 0)
                 {
                     int bytesReceived = receivingSocket.Receive(buffer);
                     string message = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
-                    Debug.WriteLine("Received message: " + message);
+                    Debug.WriteLine("UDP: Received message: " + message);
                     
                     if (message == requestMessage && ServerRequestMessageReceived != null)
                     {
@@ -158,7 +154,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             // send message
             byte[] messageArray = Encoding.ASCII.GetBytes(requestMessage);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
-            Debug.WriteLine("Sent message: " + requestMessage);
+            Debug.WriteLine("UDP: Sent message: " + requestMessage);
         }
 
         public static void SendServerResponse(string name, int discs, int poles, int bestOf)
@@ -167,7 +163,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             string message = responseMessage + TCP.GetIP() + "_" + name + "_" + discs.ToString() + "_" + poles.ToString() + "_" + bestOf.ToString();
             byte[] messageArray = Encoding.ASCII.GetBytes(message);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
-            Debug.WriteLine("Sent message: " + message);
+            Debug.WriteLine("UDP: Sent message: " + message);
         }
 
         public static void SendServerResignment()
@@ -176,7 +172,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             string message = resignmentMessage + TCP.GetIP();
             byte[] messageArray = Encoding.ASCII.GetBytes(message);
             sendingSocket.SendTo(messageArray, sendingEndpoint);
-            Debug.WriteLine("Sent message: " + message);
+            Debug.WriteLine("UDP: Sent message: " + message);
         }
     }
 }
