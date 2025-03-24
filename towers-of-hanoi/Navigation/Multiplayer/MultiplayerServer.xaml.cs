@@ -74,12 +74,16 @@ namespace towers_of_hanoi.Navigation
 
         private void QuitClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToServerQuitConfirmation();
         }
 
         private void StartClicked(object sender, RoutedEventArgs e)
         {
-
+            App.MainApp.clickSound.Play();
+            ((MainWindow)(App.MainApp.MainWindow)).SwitchToMultiplayer(discs, poles);
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
         }
 
         private void SendResponseMessage(object? sender, EventArgs e)
@@ -89,11 +93,14 @@ namespace towers_of_hanoi.Navigation
 
         private void PlayerJoined(object? sender, EventArgs e)
         {
-            string? ip = sender as string;
-            if (ip != null)
+            (string, string)? data = sender as (string, string)?;
+            if (data != null)
             {
+                string ip = data.Value.Item1;
+                string name = data.Value.Item2;
                 MulticastDisconnect();
-                Status.Text = "Player joined";
+                Status.Text = "Player joined: " + name + " at " + ip;
+                StartButton.IsEnabled = true;
             }
         }
 
@@ -101,6 +108,7 @@ namespace towers_of_hanoi.Navigation
         {
             MulticastConnect();
             Status.Text = "Waiting for player...";
+            StartButton.IsEnabled = false;
         }
 
         public void UpdateDetails(string Name, int Discs, int Poles, int BestOf)

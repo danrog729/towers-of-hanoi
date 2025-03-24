@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace towers_of_hanoi.Navigation.Multiplayer
 {
@@ -30,9 +31,15 @@ namespace towers_of_hanoi.Navigation.Multiplayer
 
         private static BackgroundWorker? worker;
 
-        private static string greetingMessage = "TOH:ESTABLISH_CONNECTION";
+        private static string greetingMessage = "TOH:ESTABLISH_CONNECTION_";
+        private static string leaveMessage = "TOH:TERMINATE_CONNECTION";
+        private static string startMessage = "TOH:START_GAME";
+        private static string moveMessage = "TOH:MOVE_";
 
         public static event EventHandler GreetingReceived = delegate { };
+        public static event EventHandler LeaveMessageReceived = delegate { };
+        public static event EventHandler StartMessageReceived = delegate { };
+        public static event EventHandler MoveMessageReceived = delegate { };
 
         static TCP()
         {
@@ -111,11 +118,33 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                             string message = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
                             Debug.WriteLine("TCP: Received message: " + message);
 
-                            if (message == greetingMessage && GreetingReceived != null)
+                            if (message.Contains(greetingMessage) && GreetingReceived != null)
+                            {
+                                string name = message.Remove(0, greetingMessage.Length);
+                                App.MainApp.Dispatcher.Invoke(() =>
+                                {
+                                    GreetingReceived.Invoke((clientSocket.RemoteEndPoint.ToString(), name), new EventArgs());
+                                });
+                            }
+                            else if (message == leaveMessage && LeaveMessageReceived != null)
                             {
                                 App.MainApp.Dispatcher.Invoke(() =>
                                 {
-                                    GreetingReceived.Invoke(clientSocket.RemoteEndPoint.ToString(), new EventArgs());
+                                    LeaveMessageReceived.Invoke(null, new EventArgs());
+                                });
+                            }
+                            else if (message == startMessage && StartMessageReceived != null)
+                            {
+                                App.MainApp.Dispatcher.Invoke(() =>
+                                {
+                                    StartMessageReceived.Invoke(null, new EventArgs());
+                                });
+                            }
+                            else if (message == moveMessage && MoveMessageReceived != null)
+                            {
+                                App.MainApp.Dispatcher.Invoke(() =>
+                                {
+                                    MoveMessageReceived.Invoke(null, new EventArgs());
                                 });
                             }
                         }
@@ -140,7 +169,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             }
         }
 
-        public static void Connect(string ip)
+        public static void Connect(string ip, string name)
         {
             if (CanConnect && sendingSocket != null)
             {
@@ -150,17 +179,44 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                 {
                     remoteEndPoint = new IPEndPoint(address, port);
                     sendingSocket.Connect(remoteEndPoint);
-                    SendGreeting();
+                    SendGreeting(name);
                 }
             }
         }
 
-        private static void SendGreeting()
+        private static void SendGreeting(string name)
         {
             if (CanConnect && sendingSocket != null && remoteEndPoint != null)
             {
-                sendingSocket.Send(Encoding.ASCII.GetBytes(greetingMessage));
-                Debug.WriteLine("TCP: Sent message: " + greetingMessage);
+                sendingSocket.Send(Encoding.ASCII.GetBytes(greetingMessage + name));
+                Debug.WriteLine("TCP: Sent message: " + greetingMessage + name);
+            }
+        }
+
+        private static void SendLeaveMessage()
+        {
+            if (CanConnect && sendingSocket != null && remoteEndPoint != null)
+            {
+                sendingSocket.Send(Encoding.ASCII.GetBytes(leaveMessage));
+                Debug.WriteLine("TCP: Sent message: " + leaveMessage);
+            }
+        }
+
+        private static void SendStartMessage()
+        {
+            if (CanConnect && sendingSocket != null && remoteEndPoint != null)
+            {
+                sendingSocket.Send(Encoding.ASCII.GetBytes(startMessage));
+                Debug.WriteLine("TCP: Sent message: " + startMessage);
+            }
+        }
+
+        private static void SendMove()
+        {
+            if (CanConnect && sendingSocket != null && remoteEndPoint != null)
+            {
+                sendingSocket.Send(Encoding.ASCII.GetBytes(moveMessage));
+                Debug.WriteLine("TCP: Sent message: " + moveMessage);
             }
         }
     }

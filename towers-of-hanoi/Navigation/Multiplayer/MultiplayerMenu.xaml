@@ -11,13 +11,20 @@
     <Grid Height="450" Width="800">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0">Available players:</TextBlock>
-        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="ServerList"/>
-        <Button Grid.Row="2" Click="BackClicked" Width="100" HorizontalAlignment="Left">Back</Button>
-        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock VerticalAlignment="Center">Name:</TextBlock>
+            <Border BorderBrush="{DynamicResource BorderColour}" BorderThickness="{DynamicResource BorderThickness}"  Margin="10,5,10,5" VerticalAlignment="Center">
+                <TextBox MinWidth="100" Name="NameBox" TextChanged="NameChanged"></TextBox>
+            </Border>
+        </StackPanel>
+        <TextBlock Grid.Row="1" VerticalAlignment="Center">Available players:</TextBlock>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="ServerList"/>
+        <Button Grid.Row="3" Click="BackClicked" Width="100" HorizontalAlignment="Left">Back</Button>
+        <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
             <Button Width="100" Click="SwitchToGameCreation">Create Game</Button>
             <Button Width="100" Click="JoinGame" Name="JoinButton" IsEnabled="False">Join Game</Button>
         </StackPanel>

@@ -30,6 +30,7 @@ namespace towers_of_hanoi
         private MultiplayerSetup multiplayerSetup;
         private MultiplayerServer multiplayerServer;
         private ServerQuitConfirmation serverQuitConfirmation;
+        private MultiplayerClient multiplayerClient;
 
         private AutomaticSetup automaticSetup;
         private Settings settings;
@@ -44,6 +45,7 @@ namespace towers_of_hanoi
             multiplayerSetup = new MultiplayerSetup();
             multiplayerServer = new MultiplayerServer();
             serverQuitConfirmation = new ServerQuitConfirmation();
+            multiplayerClient = new MultiplayerClient();
             automaticSetup = new AutomaticSetup();
             settings = new Settings();
             quitConfirmation = new QuitConfirmation();
@@ -153,6 +155,17 @@ namespace towers_of_hanoi
             NavigationFrame.Content = serverQuitConfirmation;
         }
 
+        public void SwitchToMultiplayerClient()
+        {
+            Left += Width / 2 - MultiplayerClient.DesiredWidth / 2 - NavigationFrame.Margin.Left;
+            Top += Height / 2 - MultiplayerClient.DesiredHeight / 2 - NavigationFrame.Margin.Top;
+
+            multiplayerClient.Width = MultiplayerClient.DesiredWidth;
+            multiplayerClient.Height = MultiplayerClient.DesiredHeight;
+
+            NavigationFrame.Content = multiplayerClient;
+        }
+
         public void SwitchToAutomaticSetup()
         {
             Left += Width / 2 - AutomaticSetup.DesiredWidth / 2 - NavigationFrame.Margin.Left;
@@ -192,6 +205,7 @@ namespace towers_of_hanoi
             multiplayerSetup.Recolour();
             automaticSetup.Recolour();
             multiplayerServer.Recolour();
+            multiplayerClient.Recolour();
         }
 
         public void OpenMultiplayerServer()
@@ -207,6 +221,7 @@ namespace towers_of_hanoi
         public void SetServerSettings(string name, int discs, int poles, int bestOf)
         {
             multiplayerServer.UpdateDetails(name, discs, poles, bestOf);
+            multiplayerClient.UpdateDetails(name, discs, poles, bestOf);
         }
 
         public void SetSelectedServerEntry(ServerEntry entry)

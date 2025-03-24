@@ -29,11 +29,15 @@ namespace towers_of_hanoi.Navigation
         public static int DesiredWidth = 800;
         public static int DesiredHeight = 450;
 
+        private bool nameValid;
+        private bool isServerSelected;
         private int serverSelected;
 
         public MultiplayerMenu()
         {
             InitializeComponent();
+            nameValid = false;
+            isServerSelected = false;
             serverSelected = 0;
         }
 
@@ -77,13 +81,18 @@ namespace towers_of_hanoi.Navigation
                     entry.EntryUnclicked();
                 }
             }
+            isServerSelected = false;
             JoinButton.IsEnabled = false;
         }
 
         public void SetSelectedEntry(ServerEntry entry)
         {
-            JoinButton.IsEnabled = true;
+            if (nameValid)
+            {
+                JoinButton.IsEnabled = true;
+            }
             serverSelected = ServerList.Children.IndexOf(entry);
+            isServerSelected = true;
             for (int index = 0; index < ServerList.Children.Count; index++)
             {
                 if (index != serverSelected)
@@ -97,10 +106,28 @@ namespace towers_of_hanoi.Navigation
             }
         }
 
+        private void NameChanged(object sender, TextChangedEventArgs e)
+        {
+            nameValid = true;
+            if (NameBox.Text.Trim() == "")
+            {
+                nameValid = false;
+                JoinButton.IsEnabled = false;
+            }
+            else if (isServerSelected)
+            {
+                JoinButton.IsEnabled = true;
+            }
+        }
+
         private void JoinGame(object sender, RoutedEventArgs e)
         {
+            Deinitialise();
+            ServerEntry entry = ((ServerEntry)ServerList.Children[serverSelected]);
+            ((MainWindow)App.MainApp.MainWindow).navigationWindow.SetServerSettings(entry.ServerName, entry.Discs, entry.Poles, entry.BestOf);
+            ((MainWindow)App.MainApp.MainWindow).navigationWindow.SwitchToMultiplayerClient();
             // establish a tcp connection, which should tell the server to announcing leaving to the multicast
-            TCP.Connect(((ServerEntry)ServerList.Children[serverSelected]).IPAddress);
+            TCP.Connect(entry.IPAddress, NameBox.Text);
             // start playing the game
         }
 
