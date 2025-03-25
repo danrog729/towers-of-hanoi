@@ -31,6 +31,7 @@ namespace towers_of_hanoi
         private MultiplayerServer multiplayerServer;
         private ServerQuitConfirmation serverQuitConfirmation;
         private MultiplayerClient multiplayerClient;
+        private ClientQuitConfirmation clientQuitConfirmation;
 
         private AutomaticSetup automaticSetup;
         private Settings settings;
@@ -46,6 +47,7 @@ namespace towers_of_hanoi
             multiplayerServer = new MultiplayerServer();
             serverQuitConfirmation = new ServerQuitConfirmation();
             multiplayerClient = new MultiplayerClient();
+            clientQuitConfirmation = new ClientQuitConfirmation();
             automaticSetup = new AutomaticSetup();
             settings = new Settings();
             quitConfirmation = new QuitConfirmation();
@@ -79,6 +81,14 @@ namespace towers_of_hanoi
                 else if (NavigationFrame.Content == serverQuitConfirmation)
                 {
                     SwitchToMultiplayerServer();
+                }
+                else if (NavigationFrame.Content == multiplayerClient)
+                {
+                    SwitchToClientQuitConfirmation();
+                }
+                else if (NavigationFrame.Content == clientQuitConfirmation)
+                {
+                    SwitchToMultiplayerClient();
                 }
                 else
                 {
@@ -166,6 +176,17 @@ namespace towers_of_hanoi
             NavigationFrame.Content = multiplayerClient;
         }
 
+        public void SwitchToClientQuitConfirmation()
+        {
+            Left += Width / 2 - ClientQuitConfirmation.DesiredWidth / 2 - NavigationFrame.Margin.Left;
+            Top += Height / 2 - ClientQuitConfirmation.DesiredHeight / 2 - NavigationFrame.Margin.Top;
+
+            clientQuitConfirmation.Width = ClientQuitConfirmation.DesiredWidth;
+            clientQuitConfirmation.Height = ClientQuitConfirmation.DesiredHeight;
+
+            NavigationFrame.Content = clientQuitConfirmation;
+        }
+
         public void SwitchToAutomaticSetup()
         {
             Left += Width / 2 - AutomaticSetup.DesiredWidth / 2 - NavigationFrame.Margin.Left;
@@ -213,9 +234,19 @@ namespace towers_of_hanoi
             multiplayerServer.OpenServer();
         }
 
-        public void QuitMultiplayerServer()
+        public void CloseMultiplayer()
         {
             multiplayerServer.CloseServer();
+        }
+
+        public void JoinMultiplayerServer(string ip, string name)
+        {
+            multiplayerClient.JoinServer(ip, name);
+        }
+
+        public void LeaveMultiplayerServer()
+        {
+            multiplayerClient.LeaveServer();
         }
 
         public void SetServerSettings(string name, int discs, int poles, int bestOf)

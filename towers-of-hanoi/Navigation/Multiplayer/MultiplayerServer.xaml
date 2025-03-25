@@ -26,15 +26,17 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Name="DiscBox" VerticalAlignment="Center">Discs: 6</TextBlock>
-            <TextBlock Grid.Row="1" Name="PoleBox" VerticalAlignment="Center">Poles: 3</TextBlock>
-            <TextBlock Grid.Row="2" Name="BestOfBox" VerticalAlignment="Center">Best of: 1</TextBlock>
+            <TextBlock Grid.Row="0" Name="NameBox" VerticalAlignment="Center">Name: server name</TextBlock>
+            <TextBlock Grid.Row="1" Name="DiscBox" VerticalAlignment="Center">Discs: 6</TextBlock>
+            <TextBlock Grid.Row="2" Name="PoleBox" VerticalAlignment="Center">Poles: 3</TextBlock>
+            <TextBlock Grid.Row="3" Name="BestOfBox" VerticalAlignment="Center">Best of: 1</TextBlock>
         </Grid>
 
         <TextBlock Grid.Row="1" Grid.Column="1" Name="Status" Margin="10" VerticalAlignment="Center">Waiting for player...</TextBlock>
 
         <Button Grid.Row="2" Grid.Column="0" Width="100" Margin="10" HorizontalAlignment="Left" Click="QuitClicked">Quit</Button>
-        <Button Grid.Row="3" Grid.Column="1" Width="100" Margin="10" HorizontalAlignment="Right" Click="StartClicked" IsEnabled="False" Name="StartButton">Start</Button>
+        <Button Grid.Row="3" Grid.Column="1" Width="100" Margin="10" HorizontalAlignment="Right" Click="ReadyClicked" IsEnabled="False" Name="ReadyButton">Ready</Button>
     </Grid>
 </Page>

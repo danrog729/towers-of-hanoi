@@ -31,18 +31,28 @@ namespace towers_of_hanoi.Navigation
 
         private Scene3D discScene;
 
+        private bool otherPlayerReady;
+        private bool iAmReady;
+        string otherPlayerName;
+
         public MultiplayerServer()
         {
             InitializeComponent();
             serverName = "server name";
             discScene = new Scene3D(Viewport);
             discScene.Reset(6, 3, 0, 2f);
+            otherPlayerReady = false;
+            iAmReady = false;
+            otherPlayerName = "other player";
         }
 
         public void OpenServer()
         {
             MulticastConnect();
             Multiplayer.TCP.GreetingReceived += PlayerJoined;
+            Status.Text = "Waiting for player...\nYou are not ready.";
+            otherPlayerReady = false;
+            iAmReady = false;
             TCP.StartServer();
         }
 
@@ -50,6 +60,8 @@ namespace towers_of_hanoi.Navigation
         {
             MulticastDisconnect();
             Multiplayer.TCP.GreetingReceived -= PlayerJoined;
+            otherPlayerReady = false;
+            iAmReady = false;
             TCP.CloseServer();
         }
         
@@ -78,12 +90,21 @@ namespace towers_of_hanoi.Navigation
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToServerQuitConfirmation();
         }
 
-        private void StartClicked(object sender, RoutedEventArgs e)
+        private void ReadyClicked(object sender, RoutedEventArgs e)
         {
             App.MainApp.clickSound.Play();
-            ((MainWindow)(App.MainApp.MainWindow)).SwitchToMultiplayer(discs, poles);
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
+            TCP.SendReadyMessage();
+            iAmReady = true;
+            Status.Text = otherPlayerName + " is not ready.\nYou are ready.";
+            if (otherPlayerReady)
+            {
+                ((MainWindow)(App.MainApp.MainWindow)).SwitchToMultiplayer(discs, poles);
+                ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
+                ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
+
+                Multiplayer.TCP.LeaveMessageReceived -= PlayerLeft;
+                Multiplayer.TCP.ReadyMessageReceived -= ReadyToStart;
+            }
         }
 
         private void SendResponseMessage(object? sender, EventArgs e)
@@ -97,18 +118,42 @@ namespace towers_of_hanoi.Navigation
             if (data != null)
             {
                 string ip = data.Value.Item1;
-                string name = data.Value.Item2;
+                otherPlayerName = data.Value.Item2;
                 MulticastDisconnect();
-                Status.Text = "Player joined: " + name + " at " + ip;
-                StartButton.IsEnabled = true;
+                TCP.Connect(ip, serverName);
+                Status.Text = otherPlayerName + " is not ready.\nYou are not ready.";
+                ReadyButton.IsEnabled = true;
+                otherPlayerReady = false;
+
+                Multiplayer.TCP.LeaveMessageReceived += PlayerLeft;
+                Multiplayer.TCP.ReadyMessageReceived += ReadyToStart;
             }
         }
 
         private void PlayerLeft(object? sender, EventArgs e)
         {
             MulticastConnect();
-            Status.Text = "Waiting for player...";
-            StartButton.IsEnabled = false;
+            Status.Text = "Waiting for player...\nYou are not ready.";
+            ReadyButton.IsEnabled = false;
+            otherPlayerReady = false;
+
+            Multiplayer.TCP.LeaveMessageReceived -= PlayerLeft;
+            Multiplayer.TCP.ReadyMessageReceived -= ReadyToStart;
+        }
+
+        private void ReadyToStart(object? sender, EventArgs e)
+        {
+            otherPlayerReady = true;
+            Status.Text = otherPlayerName + " is ready.\nYou are not ready";
+            if (iAmReady)
+            {
+                ((MainWindow)(App.MainApp.MainWindow)).SwitchToMultiplayer(discs, poles);
+                ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMainMenu();
+                ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.Hide();
+
+                Multiplayer.TCP.LeaveMessageReceived -= PlayerLeft;
+                Multiplayer.TCP.ReadyMessageReceived -= ReadyToStart;
+            }
         }
 
         public void UpdateDetails(string Name, int Discs, int Poles, int BestOf)
@@ -120,6 +165,7 @@ namespace towers_of_hanoi.Navigation
 
             // update textboxes and viewport and stuff
             discScene.Reset(discs, poles, 0, 2);
+            NameBox.Text = "Name: " + serverName;
             DiscBox.Text = "Discs: " + discs;
             PoleBox.Text = "Poles: " + poles;
             BestOfBox.Text = "Best of: " + bestOf;

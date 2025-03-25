@@ -126,9 +126,7 @@ namespace towers_of_hanoi.Navigation
             ServerEntry entry = ((ServerEntry)ServerList.Children[serverSelected]);
             ((MainWindow)App.MainApp.MainWindow).navigationWindow.SetServerSettings(entry.ServerName, entry.Discs, entry.Poles, entry.BestOf);
             ((MainWindow)App.MainApp.MainWindow).navigationWindow.SwitchToMultiplayerClient();
-            // establish a tcp connection, which should tell the server to announcing leaving to the multicast
-            TCP.Connect(entry.IPAddress, NameBox.Text);
-            // start playing the game
+            ((MainWindow)App.MainApp.MainWindow).navigationWindow.JoinMultiplayerServer(entry.IPAddress, NameBox.Text);
         }
 
         private void AddServerListing(object? sender, EventArgs e)

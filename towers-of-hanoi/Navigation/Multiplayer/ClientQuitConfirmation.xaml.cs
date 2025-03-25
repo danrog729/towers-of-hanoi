@@ -18,25 +18,25 @@ namespace towers_of_hanoi.Navigation.Multiplayer
     /// <summary>
     /// Interaction logic for ServerQuitConfirmation.xaml
     /// </summary>
-    public partial class ServerQuitConfirmation : Page
+    public partial class ClientQuitConfirmation : Page
     {
         public static int DesiredWidth = 400;
         public static int DesiredHeight = 200;
 
-        public ServerQuitConfirmation()
+        public ClientQuitConfirmation()
         {
             InitializeComponent();
         }
 
         private void BackClicked(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerServer();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerClient();
         }
 
         private void QuitClicked(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.CloseMultiplayer();
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerSetup();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.LeaveMultiplayerServer();
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerMenu();
         }
     }
 }
