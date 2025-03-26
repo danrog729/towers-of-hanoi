@@ -56,6 +56,7 @@ namespace towers_of_hanoi
             timer.Tick += UpdateTimerText;
 
             TCP.MoveMessageReceived += ReceivedMove;
+            TCP.LeaveMessageReceived += OtherPlayerLeft;
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
@@ -162,6 +163,15 @@ namespace towers_of_hanoi
             }
         }
 
+        private void OtherPlayerLeft(object? sender, EventArgs e)
+        {
+            // show a messagebox warning that the other player left, then go to singleplayer
+            TCP.CloseServer();
+            TCP.Disconnect();
+            MessageBox.Show("The other player disconnected.");
+            ((MainWindow)App.MainApp.MainWindow).SwitchToSingleplayer(discCount, poleCount);
+        }
+
         private void ReceivedMove(object? sender, EventArgs e)
         {
             (int, int, string)? data = sender as (int, int, string)?;
@@ -169,7 +179,7 @@ namespace towers_of_hanoi
             {
                 (int, int, string) moves = data.Value;
                 remoteGame.MoveDisc(moves.Item1, moves.Item2);
-                if (remoteGame.GameWon && inGame)
+                if (remoteGame.GameWon && !localGame.GameWon)
                 {
                     inGame = false;
                     stopwatch.Stop();
@@ -190,15 +200,16 @@ namespace towers_of_hanoi
             {
                 // valid move, move disc
                 scene.DropDisc(localGame.PeekPole(move.Item2), move.Item2, localGame.NumberOnPole(move.Item2) - 1);
+                string time = TimerOutput.Text;
                 if (localGame.GameWon)
                 {
                     inGame = false;
                     stopwatch.Stop();
                     timer.Stop();
                     UpdateTimerText(null, new EventArgs());
-                    MessageBox.Show("You won in " + localGame.MovesTaken.ToString() + " moves in " +
-                        ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
-                    TCP.SendMove(move.Item1, move.Item2, ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
+                    time = TimerOutput.Text;
+                    TCP.SendMove(move.Item1, move.Item2, time);
+                    MessageBox.Show("You won in " + localGame.MovesTaken.ToString() + " moves in " + time);
                     stopwatch.Reset();
                     localGame = new Game(poleCount, discCount, 0, poleCount - 1);
                     remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
@@ -206,7 +217,7 @@ namespace towers_of_hanoi
                 }
                 else
                 {
-                    TCP.SendMove(move.Item1, move.Item2, ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
+                    TCP.SendMove(move.Item1, move.Item2, time);
                 }
             }
             else if (localGame.NumberOnPole(move.Item1) != 0)
@@ -223,6 +234,7 @@ namespace towers_of_hanoi
             scene.Reset(discCount, poleCount, 0, discHeight);
             localGame = new Game(poleCount, discCount, 0, poleCount - 1);
             remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
+            inGame = false;
             Viewport.Focus();
         }
 
