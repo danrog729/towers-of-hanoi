@@ -151,12 +151,17 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                                             ReadyMessageReceived.Invoke(null, new EventArgs());
                                         });
                                     }
-                                    else if (message == moveMessage && MoveMessageReceived != null)
+                                    else if (message.Contains(moveMessage) && MoveMessageReceived != null)
                                     {
-                                        App.MainApp.Dispatcher.Invoke(() =>
+                                        string payload = message.Remove(0, moveMessage.Length);
+                                        string[] data = payload.Split("_");
+                                        if (Int32.TryParse(data[0], out int moveFrom) && Int32.TryParse(data[1], out int moveTo) && data.Length == 3)
                                         {
-                                            MoveMessageReceived.Invoke(null, new EventArgs());
-                                        });
+                                            App.MainApp.Dispatcher.Invoke(() =>
+                                            {
+                                                MoveMessageReceived.Invoke((moveFrom, moveTo, data[2]), new EventArgs());
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -241,12 +246,12 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             }
         }
 
-        public static void SendMove()
+        public static void SendMove(int moveFrom, int moveTo, string time)
         {
             if (CanConnect && sendingSocket != null && remoteEndPoint != null)
             {
-                sendingSocket.Send(Encoding.ASCII.GetBytes(moveMessage));
-                Debug.WriteLine("TCP: Sent message: " + moveMessage);
+                sendingSocket.Send(Encoding.ASCII.GetBytes(moveMessage + moveFrom.ToString() + "_" + moveTo.ToString() + "_" + time));
+                Debug.WriteLine("TCP: Sent message: " + moveMessage + moveFrom.ToString() + "_" + moveTo.ToString() + "_" + time);
             }
         }
     }

@@ -167,6 +167,7 @@ namespace towers_of_hanoi
                     inGame = false;
                     stopwatch.Stop();
                     timer.Stop();
+                    UpdateTimerText(null, new EventArgs());
                     MessageBox.Show("You won in " + game.MovesTaken.ToString() + " moves in " +
                         ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
                     stopwatch.Reset();

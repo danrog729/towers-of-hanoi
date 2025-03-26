@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using towers_of_hanoi.Navigation.Multiplayer;
 
 namespace towers_of_hanoi
 {
@@ -25,7 +26,8 @@ namespace towers_of_hanoi
     public partial class Multiplayer : Page
     {
         Scene3D scene;
-        Game game;
+        Game localGame;
+        Game remoteGame;
         Point lastMousePos;
         bool rightMouseDownLast;
 
@@ -41,8 +43,9 @@ namespace towers_of_hanoi
         {
             InitializeComponent();
             scene = new Scene3D(Viewport);
-            game = new Game(3, discCount, 0, 2);
-            scene.Reset(discCount, 3, 0, discHeight);
+            localGame = new Game(poleCount, discCount, 0, 2);
+            remoteGame = new Game(poleCount, discCount, 0, 2);
+            scene.Reset(discCount, poleCount, 0, discHeight);
             lastMousePos = new Point(0, 0);
             rightMouseDownLast = false;
 
@@ -51,6 +54,8 @@ namespace towers_of_hanoi
             stopwatch = new Stopwatch();
             timer.Interval = TimeSpan.FromSeconds(0.001);
             timer.Tick += UpdateTimerText;
+
+            TCP.MoveMessageReceived += ReceivedMove;
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
@@ -82,10 +87,10 @@ namespace towers_of_hanoi
                 {
                     // get which pole the mouse is over, if any
                     int overPole = scene.MoveDragAndDrop(currentPos);
-                    if (overPole != -1 && overPole != scene.DraggingLastOver && game.NumberOnPole(scene.DraggingFrom) != 0)
+                    if (overPole != -1 && overPole != scene.DraggingLastOver && localGame.NumberOnPole(scene.DraggingFrom) != 0)
                     {
                         // hovering over a pole
-                        scene.HoverDisc(game.PeekPole(scene.DraggingFrom), overPole);
+                        scene.HoverDisc(localGame.PeekPole(scene.DraggingFrom), overPole);
                         scene.DraggingLastOver = overPole;
                     }
                 }
@@ -103,9 +108,9 @@ namespace towers_of_hanoi
             Viewport.Focus();
             System.Windows.Point currentPos = e.GetPosition(Viewport);
             scene.SelectObjectForDragAndDrop(currentPos);
-            if (scene.ValidDragDrop && game.NumberOnPole(scene.DraggingFrom) != 0)
+            if (scene.ValidDragDrop && localGame.NumberOnPole(scene.DraggingFrom) != 0)
             {
-                scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
+                scene.HoverDisc(localGame.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
                 scene.DraggingLastOver = scene.DraggingFrom;
                 if (!inGame)
                 {
@@ -136,10 +141,10 @@ namespace towers_of_hanoi
                 {
                     if (!scene.ValidDragDrop)
                     {
-                        if (game.NumberOnPole(poleNumber) != 0)
+                        if (localGame.NumberOnPole(poleNumber) != 0)
                         {
                             scene.SelectDirectMove(poleNumber);
-                            scene.HoverDisc(game.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
+                            scene.HoverDisc(localGame.PeekPole(scene.DraggingFrom), scene.DraggingFrom);
                             if (!inGame)
                             {
                                 inGame = true;
@@ -157,29 +162,57 @@ namespace towers_of_hanoi
             }
         }
 
-        private void MoveDisc((int, int) move)
+        private void ReceivedMove(object? sender, EventArgs e)
         {
-            // see if its a valid, move play it if yes
-            if (game.MoveDisc(move.Item1, move.Item2))
+            (int, int, string)? data = sender as (int, int, string)?;
+            if (data != null)
             {
-                // valid move, move disc
-                scene.DropDisc(game.PeekPole(move.Item2), move.Item2, game.NumberOnPole(move.Item2) - 1);
-                if (game.GameWon)
+                (int, int, string) moves = data.Value;
+                remoteGame.MoveDisc(moves.Item1, moves.Item2);
+                if (remoteGame.GameWon && inGame)
                 {
                     inGame = false;
                     stopwatch.Stop();
                     timer.Stop();
-                    MessageBox.Show("You won in " + game.MovesTaken.ToString() + " moves in " +
-                        ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
+                    MessageBox.Show("They won in " + remoteGame.MovesTaken.ToString() + " moves in " + moves.Item3);
                     stopwatch.Reset();
-                    game = new Game(poleCount, discCount, 0, poleCount - 1);
+                    localGame = new Game(poleCount, discCount, 0, poleCount - 1);
+                    remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
                     scene.Reset(discCount, poleCount, 0, discHeight);
                 }
             }
-            else if (game.NumberOnPole(move.Item1) != 0)
+        }
+
+        private void MoveDisc((int, int) move)
+        {
+            // see if its a valid, move play it if yes
+            if (localGame.MoveDisc(move.Item1, move.Item2))
+            {
+                // valid move, move disc
+                scene.DropDisc(localGame.PeekPole(move.Item2), move.Item2, localGame.NumberOnPole(move.Item2) - 1);
+                if (localGame.GameWon)
+                {
+                    inGame = false;
+                    stopwatch.Stop();
+                    timer.Stop();
+                    UpdateTimerText(null, new EventArgs());
+                    MessageBox.Show("You won in " + localGame.MovesTaken.ToString() + " moves in " +
+                        ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
+                    TCP.SendMove(move.Item1, move.Item2, ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
+                    stopwatch.Reset();
+                    localGame = new Game(poleCount, discCount, 0, poleCount - 1);
+                    remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
+                    scene.Reset(discCount, poleCount, 0, discHeight);
+                }
+                else
+                {
+                    TCP.SendMove(move.Item1, move.Item2, ((int)(stopwatch.Elapsed.TotalMinutes)).ToString("00") + ":" + (stopwatch.Elapsed.TotalSeconds % 60).ToString("00.000"));
+                }
+            }
+            else if (localGame.NumberOnPole(move.Item1) != 0)
             {
                 // invalid move, move the disc back to where it was
-                scene.DropDisc(game.PeekPole(move.Item1), move.Item1, game.NumberOnPole(move.Item1) - 1);
+                scene.DropDisc(localGame.PeekPole(move.Item1), move.Item1, localGame.NumberOnPole(move.Item1) - 1);
             }
         }
 
@@ -188,7 +221,8 @@ namespace towers_of_hanoi
             discCount = DiscCount;
             poleCount = PoleCount;
             scene.Reset(discCount, poleCount, 0, discHeight);
-            game = new Game(poleCount, discCount, 0, poleCount - 1);
+            localGame = new Game(poleCount, discCount, 0, poleCount - 1);
+            remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
             Viewport.Focus();
         }
 
