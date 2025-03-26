@@ -68,6 +68,7 @@ namespace towers_of_hanoi
         {
             if (e.Key == Key.Escape)
             {
+                App.MainApp.clickSound.Play();
                 if (NavigationFrame.Content == mainMenu)
                 {
                     Hide();

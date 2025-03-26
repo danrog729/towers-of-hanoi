@@ -54,9 +54,6 @@ namespace towers_of_hanoi
             stopwatch = new Stopwatch();
             timer.Interval = TimeSpan.FromSeconds(0.001);
             timer.Tick += UpdateTimerText;
-
-            TCP.MoveMessageReceived += ReceivedMove;
-            TCP.LeaveMessageReceived += OtherPlayerLeft;
         }
 
         private void ViewportMouseMoved(object sender, MouseEventArgs e)
@@ -161,6 +158,18 @@ namespace towers_of_hanoi
                     }
                 }
             }
+        }
+
+        public void Initialise()
+        {
+            TCP.MoveMessageReceived += ReceivedMove;
+            TCP.LeaveMessageReceived += OtherPlayerLeft;
+        }
+
+        public void Deinitialise()
+        {
+            TCP.MoveMessageReceived -= ReceivedMove;
+            TCP.LeaveMessageReceived -= OtherPlayerLeft;
         }
 
         private void OtherPlayerLeft(object? sender, EventArgs e)

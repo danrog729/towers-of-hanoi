@@ -39,6 +39,9 @@ namespace towers_of_hanoi
 
         private void WindowClosing(object sender, EventArgs e)
         {
+            Navigation.Multiplayer.MultiCast.Disconnect();
+            Navigation.Multiplayer.TCP.Disconnect();
+            Navigation.Multiplayer.TCP.CloseServer();
             navigationWindow.Close();
         }
 
@@ -46,13 +49,13 @@ namespace towers_of_hanoi
         {
             if (e.Key == Key.Escape)
             {
+                App.MainApp.clickSound.Play();
                 if (navigationWindow.Visibility == Visibility.Hidden)
                 {
                     if (!mainMenuOpened)
                     {
                         navigationWindow.Owner = this;
                     }
-                    App.MainApp.clickSound.Play();
                     navigationWindow.ShowDialog();
                 }
                 else
@@ -76,6 +79,7 @@ namespace towers_of_hanoi
             multiplayer.NewMultiplayer(DiscCount, PoleCount);
             ContentFrame.Content = multiplayer;
             navigationWindow.mainMenu.SwitchedToMultiplayer();
+            multiplayer.Initialise();
         }
 
         public void SwitchToAutomatic(int DiscCount, int PoleCount)
@@ -87,13 +91,13 @@ namespace towers_of_hanoi
 
         private void MenuClicked(object sender, EventArgs e)
         {
+            App.MainApp.clickSound.Play();
             if (navigationWindow.Visibility == Visibility.Hidden)
             {
                 if (!mainMenuOpened)
                 {
                     navigationWindow.Owner = this;
                 }
-                App.MainApp.clickSound.Play();
                 navigationWindow.ShowDialog();
             }
             else

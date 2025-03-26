@@ -87,6 +87,7 @@ namespace towers_of_hanoi.Navigation
 
         public void SetSelectedEntry(ServerEntry entry)
         {
+            App.MainApp.clickSound.Play();
             if (nameValid)
             {
                 JoinButton.IsEnabled = true;

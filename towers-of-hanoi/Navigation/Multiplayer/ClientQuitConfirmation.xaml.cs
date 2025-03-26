@@ -30,11 +30,13 @@ namespace towers_of_hanoi.Navigation.Multiplayer
 
         private void BackClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerClient();
         }
 
         private void QuitClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.LeaveMultiplayerServer();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerMenu();
         }

@@ -41,6 +41,8 @@ namespace towers_of_hanoi.Navigation.Multiplayer
         public static event EventHandler ReadyMessageReceived = delegate { };
         public static event EventHandler MoveMessageReceived = delegate { };
 
+        public static bool Connected = false;
+
         static TCP()
         {
             IPAddress? localIP = GetLocalIPAddress();
@@ -128,7 +130,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                                     string message = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
                                     Debug.WriteLine("TCP: Received message: " + message);
 
-                                    if (message.Contains(greetingMessage) && GreetingReceived != null)
+                                    if (message.Contains(greetingMessage) && GreetingReceived != null && !worker.CancellationPending)
                                     {
                                         string payload = message.Remove(0, greetingMessage.Length);
                                         string[] data = payload.Split("_");
@@ -137,21 +139,21 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                                             GreetingReceived.Invoke((data[0], data[1]), new EventArgs());
                                         });
                                     }
-                                    else if (message == leaveMessage && LeaveMessageReceived != null)
+                                    else if (message == leaveMessage && LeaveMessageReceived != null && !worker.CancellationPending)
                                     {
                                         App.MainApp.Dispatcher.Invoke(() =>
                                         {
                                             LeaveMessageReceived.Invoke(null, new EventArgs());
                                         });
                                     }
-                                    else if (message == readyMessage && ReadyMessageReceived != null)
+                                    else if (message == readyMessage && ReadyMessageReceived != null && !worker.CancellationPending)
                                     {
                                         App.MainApp.Dispatcher.Invoke(() =>
                                         {
                                             ReadyMessageReceived.Invoke(null, new EventArgs());
                                         });
                                     }
-                                    else if (message.Contains(moveMessage) && MoveMessageReceived != null)
+                                    else if (message.Contains(moveMessage) && MoveMessageReceived != null && !worker.CancellationPending)
                                     {
                                         string payload = message.Remove(0, moveMessage.Length);
                                         string[] data = payload.Split("_");
@@ -182,6 +184,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             if (CanConnect && worker != null)
             {
                 worker.RunWorkerAsync();
+                Connected = true;
             }
         }
 
@@ -190,6 +193,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             if (worker != null)
             {
                 worker.CancelAsync();
+                Connected = false;
             }
         }
 

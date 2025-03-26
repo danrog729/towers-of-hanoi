@@ -253,6 +253,7 @@ namespace towers_of_hanoi
 
         private void NextClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             if (paused)
             {
                 if (!game.GameWon)
@@ -274,6 +275,7 @@ namespace towers_of_hanoi
 
         private void PauseClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             paused = !paused;
             if (!paused && readyToUnpause)
             {
@@ -287,6 +289,7 @@ namespace towers_of_hanoi
 
         private void PreviousClicked(object sender, RoutedEventArgs e)
         {
+            App.MainApp.clickSound.Play();
             if (game.moveHistory.Count > 0 && paused)
             {
                 (int, int) move = game.UndoMove();
