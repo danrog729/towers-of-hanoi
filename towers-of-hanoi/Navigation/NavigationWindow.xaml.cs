@@ -23,7 +23,7 @@ namespace towers_of_hanoi
     /// </summary>
     public partial class NavigationWindow : Window
     {
-        private MainMenu mainMenu;
+        public MainMenu mainMenu;
         private SingleplayerSetup singleplayerSetup;
 
         private MultiplayerMenu multiplayerMenu;
@@ -32,6 +32,7 @@ namespace towers_of_hanoi
         private ServerQuitConfirmation serverQuitConfirmation;
         private MultiplayerClient multiplayerClient;
         private ClientQuitConfirmation clientQuitConfirmation;
+        private MultiplayerQuitConfirmation multiplayerQuitConfirmation;
 
         private AutomaticSetup automaticSetup;
         private Settings settings;
@@ -48,6 +49,7 @@ namespace towers_of_hanoi
             serverQuitConfirmation = new ServerQuitConfirmation();
             multiplayerClient = new MultiplayerClient();
             clientQuitConfirmation = new ClientQuitConfirmation();
+            multiplayerQuitConfirmation = new MultiplayerQuitConfirmation();
             automaticSetup = new AutomaticSetup();
             settings = new Settings();
             quitConfirmation = new QuitConfirmation();
@@ -185,6 +187,17 @@ namespace towers_of_hanoi
             clientQuitConfirmation.Height = ClientQuitConfirmation.DesiredHeight;
 
             NavigationFrame.Content = clientQuitConfirmation;
+        }
+
+        public void SwitchToMultiplayerQuitConfirmation()
+        {
+            Left += Width / 2 - MultiplayerQuitConfirmation.DesiredWidth / 2 - NavigationFrame.Margin.Left;
+            Top += Height / 2 - MultiplayerQuitConfirmation.DesiredHeight / 2 - NavigationFrame.Margin.Top;
+
+            multiplayerQuitConfirmation.Width = MultiplayerQuitConfirmation.DesiredWidth;
+            multiplayerQuitConfirmation.Height = MultiplayerQuitConfirmation.DesiredHeight;
+
+            NavigationFrame.Content = multiplayerQuitConfirmation;
         }
 
         public void SwitchToAutomaticSetup()

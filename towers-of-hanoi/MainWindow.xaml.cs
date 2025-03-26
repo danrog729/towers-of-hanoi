@@ -67,6 +67,7 @@ namespace towers_of_hanoi
             automatic.CancelBotPlay();
             singleplayer.NewSingleplayer(DiscCount, PoleCount);
             ContentFrame.Content = singleplayer;
+            navigationWindow.mainMenu.SwitchedFromMultiplayer();
         }
 
         public void SwitchToMultiplayer(int DiscCount, int PoleCount)
@@ -74,12 +75,14 @@ namespace towers_of_hanoi
             automatic.CancelBotPlay();
             multiplayer.NewMultiplayer(DiscCount, PoleCount);
             ContentFrame.Content = multiplayer;
+            navigationWindow.mainMenu.SwitchedToMultiplayer();
         }
 
         public void SwitchToAutomatic(int DiscCount, int PoleCount)
         {
             automatic.NewAutomatic(DiscCount, PoleCount);
             ContentFrame.Content = automatic;
+            navigationWindow.mainMenu.SwitchedFromMultiplayer();
         }
 
         private void MenuClicked(object sender, EventArgs e)

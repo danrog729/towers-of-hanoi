@@ -23,9 +23,12 @@ namespace towers_of_hanoi
         public static int DesiredWidth = 450;
         public static int DesiredHeight = 600;
 
+        private bool InMultiplayer;
+
         public MainMenu()
         {
             InitializeComponent();
+            InMultiplayer = false;
         }
 
         private void ResumeClicked(object sender, EventArgs e)
@@ -43,7 +46,15 @@ namespace towers_of_hanoi
         private void MultiplayerClicked(object sender, EventArgs e)
         {
             App.MainApp.clickSound.Play();
-            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerMenu();
+            if (InMultiplayer)
+            {
+                // show confirmation menu
+                ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerQuitConfirmation();
+            }
+            else
+            {
+                ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerMenu();
+            }
         }
 
         private void AutomaticClicked(object sender, EventArgs e)
@@ -62,6 +73,18 @@ namespace towers_of_hanoi
         {
             App.MainApp.clickSound.Play();
             ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToQuitConfirmation();
+        }
+
+        public void SwitchedToMultiplayer()
+        {
+            InMultiplayer = true;
+            MultiplayerButton.Content = "Leave Game";
+        }
+
+        public void SwitchedFromMultiplayer()
+        {
+            InMultiplayer = false;
+            MultiplayerButton.Content = "Multiplayer";
         }
     }
 }
