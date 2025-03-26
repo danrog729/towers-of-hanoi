@@ -62,6 +62,7 @@ namespace towers_of_hanoi.Navigation
             Multiplayer.TCP.GreetingReceived -= PlayerJoined;
             otherPlayerReady = false;
             iAmReady = false;
+            TCP.Disconnect();
             TCP.CloseServer();
         }
         

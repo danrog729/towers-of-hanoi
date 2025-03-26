@@ -220,6 +220,8 @@ namespace towers_of_hanoi.Navigation.Multiplayer
                 SendLeaveMessage();
                 sendingSocket.Shutdown(SocketShutdown.Both);
                 sendingSocket.Close();
+                remoteEndPoint = null;
+                sendingSocket = null;
             }
         }
 

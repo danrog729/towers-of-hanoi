@@ -68,6 +68,7 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             TCP.Connect(ip, playerName);
             TCP.StartServer();
             TCP.ReadyMessageReceived += ReadyToStart;
+            TCP.LeaveMessageReceived += ServerClosed;
             otherPlayerReady = false;
             iAmReady = false;
             Status.Text = serverName + " is not ready.\nYou are not ready.";
@@ -78,8 +79,16 @@ namespace towers_of_hanoi.Navigation.Multiplayer
             TCP.Disconnect();
             TCP.CloseServer();
             TCP.ReadyMessageReceived -= ReadyToStart;
+            TCP.LeaveMessageReceived -= ServerClosed;
             otherPlayerReady = false;
             iAmReady = false;
+        }
+
+        private void ServerClosed(object? sender, EventArgs e)
+        {
+            LeaveServer();
+            MessageBox.Show("Server closed.");
+            ((MainWindow)(App.MainApp.MainWindow)).navigationWindow.SwitchToMultiplayerMenu();
         }
 
         private void ReadyToStart(object? sender, EventArgs e)
