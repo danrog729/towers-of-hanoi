@@ -14,5 +14,10 @@
             MouseLeftButtonDown="ViewportLeftMouseDown" MouseLeftButtonUp="ViewportLeftMouseUp"
             KeyUp="ViewportKeyUp"/>
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="40" Name="TimerOutput">00:00.000</TextBlock>
+        <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="240" Height="135" Margin="45" BorderThickness="{DynamicResource BorderThickness}" BorderBrush="{DynamicResource BorderColour}">
+            <Grid Background="{DynamicResource Background}">
+                <Viewport3D Name="OpponentViewport"/>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

@@ -26,6 +26,7 @@ namespace towers_of_hanoi
     public partial class Multiplayer : Page
     {
         Scene3D scene;
+        Scene3D opponentScene;
         Game localGame;
         Game remoteGame;
         Point lastMousePos;
@@ -43,6 +44,7 @@ namespace towers_of_hanoi
         {
             InitializeComponent();
             scene = new Scene3D(Viewport);
+            opponentScene = new Scene3D(OpponentViewport);
             localGame = new Game(poleCount, discCount, 0, 2);
             remoteGame = new Game(poleCount, discCount, 0, 2);
             scene.Reset(discCount, poleCount, 0, discHeight);
@@ -188,6 +190,7 @@ namespace towers_of_hanoi
             {
                 (int, int, string) moves = data.Value;
                 remoteGame.MoveDisc(moves.Item1, moves.Item2);
+                opponentScene.DropDisc(remoteGame.PeekPole(moves.Item2), moves.Item2, remoteGame.NumberOnPole(moves.Item2) - 1);
                 if (remoteGame.GameWon && !localGame.GameWon)
                 {
                     inGame = false;
@@ -198,6 +201,7 @@ namespace towers_of_hanoi
                     localGame = new Game(poleCount, discCount, 0, poleCount - 1);
                     remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
                     scene.Reset(discCount, poleCount, 0, discHeight);
+                    opponentScene.Reset(discCount, poleCount, 0, discHeight);
                 }
             }
         }
@@ -223,6 +227,7 @@ namespace towers_of_hanoi
                     localGame = new Game(poleCount, discCount, 0, poleCount - 1);
                     remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
                     scene.Reset(discCount, poleCount, 0, discHeight);
+                    opponentScene.Reset(discCount, poleCount, 0, discHeight);
                 }
                 else
                 {
@@ -241,6 +246,7 @@ namespace towers_of_hanoi
             discCount = DiscCount;
             poleCount = PoleCount;
             scene.Reset(discCount, poleCount, 0, discHeight);
+            opponentScene.Reset(discCount, poleCount, 0, discHeight);
             localGame = new Game(poleCount, discCount, 0, poleCount - 1);
             remoteGame = new Game(poleCount, discCount, 0, poleCount - 1);
             inGame = false;
